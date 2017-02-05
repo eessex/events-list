@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { Router, Route, Redirect, IndexRoute, Link, browserHistory, IndexLink } from 'react-router'
 import { createBrowserHistory } from 'history'
 
-import NavContainer from './nav_container.js';
+import Main from './main.js';
 
 import EventsList from './events/events/events_list.js';
 import EventEdit from './events/event/event_edit.js';
@@ -14,7 +14,7 @@ import NotFound from './pages/error_404.js';
 
 render((
   <Router history={browserHistory}>
-    <Route path="/" component={NavContainer}>
+    <Route path="/" component={Main}>
       <IndexRoute component={EventsList} />
       <Route path="info" component={Info}/>
       <Route path="events" component={EventContainer}>

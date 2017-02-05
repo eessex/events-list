@@ -92,7 +92,7 @@ const EventEdit = React.createClass({
 
   deleteEvent(e) {
     e.preventDefault();
-    var url = '/api/events/' + this.props.params.id
+    const url = '/api/events/' + this.props.params.id
     console.log("Delete event:", this.props.params.id);
     $.ajax({
       type: 'DELETE',

@@ -37,7 +37,6 @@ const EventsList = React.createClass({
 	},
 
   changeFilter(newFilter) {
-    debugger
     this.props.router.push({search: '?' + $.param(newFilter)});
   },
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Link, IndexLink } from 'react-router'
 
-const NavContainer = React.createClass({
+const Main = React.createClass({
   render() {
   	const nav = {
   		display: 'flex',
@@ -16,7 +16,7 @@ const NavContainer = React.createClass({
     	<div className='react-container'>
 	      <nav className='nav nav--main' style={nav}>
 	        <h1 className='nav--main__logo'>
-	        	<IndexLink to="/" activeClassName="active">Site</IndexLink>
+	        	<IndexLink to="/" activeClassName="active">Events List</IndexLink>
 	        </h1>
 	        <ul className='nav--main__items' style={navItems}>
 	          <li><Link to="/events">Events</Link></li>
@@ -29,4 +29,4 @@ const NavContainer = React.createClass({
   }
 })
 
-module.exports = NavContainer;
+module.exports = Main;
