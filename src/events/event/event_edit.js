@@ -60,11 +60,19 @@ const EventEdit = React.createClass({
     this.setState({successVisible: false});
   },
 
+  onDateChange(e) {
+    //format the start and end dates
+  },
+  onImageChange() {
+    // update the images array
+  },
+  onUrlChange() {
+    // update the url array
+  },
   submit(e) {
     e.preventDefault();
     const event = {
       published: this.state.published,
-      priority: this.state.priority,
       title: this.state.title,
       venue: this.state.venue,
       organizer: this.state.organizer,
@@ -113,6 +121,14 @@ const EventEdit = React.createClass({
         <h1>Changes saved.</h1>
       </div>
     );
+    let urls = []
+    if (this.state.urls) {
+      urls = this.state.urls
+    }
+    let images = []
+    if (this.state.images) {
+      images = this.state.images
+    }
     return (
       <div className='event--edit'>
         <h2>Edit event: {this.props.params.id}</h2>
@@ -130,6 +146,35 @@ const EventEdit = React.createClass({
               name="title"
               value={this.state.title}
               onChange={this.onInputChange} />
+          </div>
+          <div className='form-group start-date'>
+            <label>Start Date:</label>
+            <input type="date"
+              name="start_date"
+              value={moment(this.state.start_date).format('YYYY-MM-DD')}
+              onChange={this.onDateChange} />
+            <input type="time"
+              name="start_time"
+              value={moment(this.state.start_date).format('HH:mm')}
+              onChange={this.onDateChange} />
+          </div>
+          <div className='form-group end-date'>
+            <label>End Date:</label>
+            <input type="date"
+              name="end_date"
+              value={moment(this.state.end_date).format('YYYY-MM-DD')}
+              onChange={this.onDateChange} />
+            <input type="time"
+              name="end_time"
+              value={moment(this.state.end_date).format('HH:mm')}
+              onChange={this.onDateChange} />
+          </div>
+          <div className='form-group all-day'>
+            <input type="checkbox"
+              name="all_day"
+              value={this.state.all_day}
+              onChange={this.onInputChange} />
+              <label>All Day Event</label>
           </div>
           <div className='form-group venue'>
             <label>Venue:</label>
@@ -152,6 +197,22 @@ const EventEdit = React.createClass({
               placeholder="Description"
               value={this.state.description}
               onChange={this.onInputChange} />
+          </div>
+          <div className='form-group'>
+            <label>External Link:</label>
+            <input type="text"
+              name="url"
+              placeholder="External Link"
+              value={urls[0]}
+              onChange={this.onUrlChange} />
+          </div>
+          <div className='form-group'>
+            <label>External Link:</label>
+            <input type="text"
+              name="image"
+              placeholder="Image"
+              value={images[0]}
+              onChange={this.onImageChange} />
           </div>
           <button type="submit">Submit</button>
           <button onClick={this.deleteEvent}>Delete</button>
