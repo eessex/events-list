@@ -7,34 +7,59 @@ import s from 'underscore.string'
 const EventEdit = React.createClass({
   getInitialState() {
     return {
-      successVisible: false
+      successVisible: false,
+      event: {
+        start_date: '',
+        end_date: '',
+        title: '',
+        description: '',
+        venue: '',
+        organizer: ''
+      },
+      url: '',
+      image: ''
     };
   },
   componentDidMount() {
-    this.loadEvent();
+    this.loadEvent()
   },
   componentDidUpdate(prevProps) {
     if (this.props.params.id != prevProps.params.id) {
-      this.loadEvent();
+      this.loadEvent()
     }
   },
   loadEvent() {
     $.ajax('/api/events/' + this.props.params.id).done(function(event) {
-      this.setState(event);
-    }.bind(this));
+      if (event.end_date) {
+        var end_time = moment(event.end_date).format('HH:mm')
+      } else {
+        var end_time = ''
+      }
+      this.setState({
+        event: event,
+        start_time: moment(event.start_date).format('HH:mm'),
+        end_time: end_time
+      })
+    }.bind(this))
   },
 
   onInputChange(e) {
     const changed = e.target.name
     const newState = this.state
-    newState[changed] = e.target.value
-    this.setState({newState});
+    if (changed == 'all_day') {
+      newState.event.all_day = e.target.checked
+    } else if (changed != 'start_time' || 'end_time' || 'url' || 'image') {
+      newState.event[changed] = e.target.value
+    } else {
+      newState[changed] = e.target.value
+    }
+    this.setState({newState})
   },
 
   getSlug(event) {
     const slug = s.slugify(event.title)
     const match = _.where(this.props.events, {slug: slug})
-    if (match.length) {
+    if (match.length != 0) {
       return this.incrementUniqueSlug(slug)
     } else {
       return s.slugify(event.title)
@@ -54,14 +79,27 @@ const EventEdit = React.createClass({
   },
 
   showSuccess() {
-    this.setState({successVisible: true});
+    this.setState({successVisible: true})
   },
   dismissSuccess() {
-    this.setState({successVisible: false});
+    this.setState({successVisible: false})
   },
-
-  onDateChange(e) {
-    //format the start and end dates
+  formatDateInput() {
+    const form = document.forms.EventEdit
+    var all_day = false
+    if (form.all_day.checked) {
+      all_day = true
+    }
+    const start_date = moment(form.start_date.value + ' ' + form.start_time.value)
+    const date = {start_date: start_date, all_day: all_day}
+    if (form.end_date.value) {
+      if (form.end_time.value) {
+        date.end_date = moment(form.end_date.value + ' ' + form.end_time.value)
+      } else {
+        date.end_date = moment(form.end_date.value)
+      }
+    }
+    return date
   },
   onImageChange() {
     // update the images array
@@ -70,29 +108,34 @@ const EventEdit = React.createClass({
     // update the url array
   },
   submit(e) {
-    e.preventDefault();
+    e.preventDefault()
+    const date = this.formatDateInput()
     const event = {
-      published: this.state.published,
-      title: this.state.title,
-      venue: this.state.venue,
-      organizer: this.state.organizer,
-      description: this.state.description,
-      updated_at: moment(new Date()).toISOString()
+      title: this.state.event.title,
+      start_date: moment(date.start_date).toISOString(),
+      all_day: date.all_day,
+      venue: this.state.event.venue,
+      organizer: this.state.event.organizer,
+      description: this.state.event.description,
+      updated_at: moment(new Date()).toISOString(),
+      published: this.state.event.published
     }
-    if (changed == 'title') {
-      const slug = this.getSlug(event)
-      newState.slugs.push(slug)
-      newState.slug = slug
+    // if (e.target.name == 'title') {
+    //   const slug = this.getSlug(event)
+    //   newState.event.slugs.push(slug)
+    //   newState.event.slug = slug
+    // }
+    if (date.end_date) {
+      event.end_date = moment(date.end_date).toISOString()
     }
-
     $.ajax({
       url: '/api/events/' + this.props.params.id,
-      type: 'PUT',
+      type: 'PATCH',
       contentType:'application/json',
       data: JSON.stringify(event),
       dataType: 'json',
       success: function(event) {
-        this.setState(event);
+        this.setState({event: event});
         this.showSuccess();
       }.bind(this),
     });
@@ -101,120 +144,130 @@ const EventEdit = React.createClass({
   deleteEvent(e) {
     e.preventDefault();
     const url = '/api/events/' + this.props.params.id
-    console.log("Delete event:", this.props.params.id);
+    console.log('Delete event:', this.props.params.id);
     $.ajax({
       type: 'DELETE',
       url: url,
       contentType: 'application/json',
       success: function(data) {
-        console.log("Deleted event:", data);
+        console.log('Deleted event:', data);
         //here install working forward to all events
       }.bind(this),
       error: function(xhr, status, err) {
-        console.log("Error adding event:", err);
+        console.log('Error adding event:', err);
       }
     });
   },
+  printDateInput(date) {
+    var format_date = ''
+    var format_time = ''
+    var time
+    if (date == 'start') {
+      if (this.state.event.start_date) {
+        format_date = moment(this.state.event.start_date).format('YYYY-MM-DD')
+      }
+      format_time = this.state.start_time
+    } else {
+      if (this.state.event.end_date) {
+        format_date = moment(this.state.event.end_date).format('YYYY-MM-DD')
+      }
+      format_time = this.state.end_time
+    }
+    var print_date = <div className='form-group start-date'>
+            <label>{date} Date:</label>
+            <input type='date'
+              name={date + '_date'}
+              value={format_date}
+              onChange={this.onInputChange} />
+            <input type='time'
+              name={date + '_time'}
+              value={format_time}
+              onChange={this.onInputChange} />
+          </div>
+    return print_date
+  },
   render() {
     const success = (
-      <div className="modal alert--success" onClick={this.dismissSuccess}>
+      <div className='modal alert--success' onClick={this.dismissSuccess}>
         <h1>Changes saved.</h1>
       </div>
     );
     let urls = []
-    if (this.state.urls) {
-      urls = this.state.urls
+    if (this.state.event.urls) {
+      urls = this.state.event.urls
     }
     let images = []
-    if (this.state.images) {
-      images = this.state.images
+    if (this.state.event.images) {
+      images = this.state.event.images
     }
     return (
       <div className='event--edit'>
-        <h2>Edit event: {this.props.params.id}</h2>
-        <form onSubmit={this.submit}>
+        <h2>Edit event: {this.state.event.title}</h2>
+        <form onSubmit={this.submit} name='EventEdit' className='event--edit__form'>
           <div className='form-group published'>
             <label>Status:</label>
-            <select value={this.state.published} onChange={this.onInputChange}>
+            <select value={this.state.event.published} onChange={this.onInputChange}>
               <option value={false}>Draft</option>
               <option value={true}>Published</option>
             </select>
           </div>
           <div className='form-group title'>
             <label>Title:</label>
-            <input type="text"
-              name="title"
-              value={this.state.title}
+            <input type='text'
+              name='title'
+              value={this.state.event.title}
               onChange={this.onInputChange} />
           </div>
-          <div className='form-group start-date'>
-            <label>Start Date:</label>
-            <input type="date"
-              name="start_date"
-              value={moment(this.state.start_date).format('YYYY-MM-DD')}
-              onChange={this.onDateChange} />
-            <input type="time"
-              name="start_time"
-              value={moment(this.state.start_date).format('HH:mm')}
-              onChange={this.onDateChange} />
-          </div>
-          <div className='form-group end-date'>
-            <label>End Date:</label>
-            <input type="date"
-              name="end_date"
-              value={moment(this.state.end_date).format('YYYY-MM-DD')}
-              onChange={this.onDateChange} />
-            <input type="time"
-              name="end_time"
-              value={moment(this.state.end_date).format('HH:mm')}
-              onChange={this.onDateChange} />
-          </div>
+          {this.printDateInput('start')}
+          {this.printDateInput('end')}
           <div className='form-group all-day'>
-            <input type="checkbox"
-              name="all_day"
-              value={this.state.all_day}
+            <input type='checkbox'
+              name='all_day'
+              id='all_day'
+              value={this.state.event.all_day}
+              checked={this.state.event.all_day}
               onChange={this.onInputChange} />
               <label>All Day Event</label>
           </div>
           <div className='form-group venue'>
             <label>Venue:</label>
-            <input type="text"
-              name="venue"
-              value={this.state.venue}
+            <input type='text'
+              name='venue'
+              value={this.state.event.venue}
               onChange={this.onInputChange} />
           </div>
           <div className='form-group organizer'>
             <label>Organizer:</label>
-            <input type="text"
-              name="organizer"
-              value={this.state.organizer}
+            <input type='text'
+              name='organizer'
+              value={this.state.event.organizer}
               onChange={this.onInputChange} />
           </div>
           <div className='form-group'>
             <label>Description:</label>
             <textarea
-              name="description"
-              placeholder="Description"
-              value={this.state.description}
+              name='description'
+              placeholder='Description'
+              value={this.state.event.description}
               onChange={this.onInputChange} />
           </div>
           <div className='form-group'>
             <label>External Link:</label>
-            <input type="text"
-              name="url"
-              placeholder="External Link"
-              value={urls[0]}
-              onChange={this.onUrlChange} />
+            <input type='text'
+              name='url'
+              placeholder='External Link'
+              value={this.state.url}
+              onChange={this.onInputChange} />
           </div>
           <div className='form-group'>
             <label>External Link:</label>
-            <input type="text"
-              name="image"
-              placeholder="Image"
-              value={images[0]}
-              onChange={this.onImageChange} />
+            <input type='text'
+              name='image'
+              placeholder='Image'
+              value={this.state.image}
+              onChange={this.onInputChange} />
           </div>
-          <button type="submit">Submit</button>
+          <button type='submit'>Submit</button>
           <button onClick={this.deleteEvent}>Delete</button>
         </form>
         {this.state.successVisible ? success : null}

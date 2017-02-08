@@ -38,6 +38,17 @@ app.post('/api/events/', function(req, res) {
   });
 });
 
+app.patch('/api/events/', function(req, res) {
+  console.log("Req body for patch:", req.body);
+  var newBug = req.body;
+  db.collection("events").insertOne(newBug, function(err, result) {
+    var newId = result.insertedId;
+    db.collection("events").find({_id: newId}).next(function(err, doc) {
+      res.json(doc);
+    });
+  });
+});
+
 app.get('/api/events/:id', function(req, res) {
   db.collection("events").findOne({_id: ObjectId(req.params.id)}, function(err, event) {
     res.json(event);
