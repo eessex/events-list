@@ -29,8 +29,8 @@ app.use(bodyParser.json());
 
 app.post('/api/events/', function(req, res) {
   console.log("Req body:", req.body);
-  var newBug = req.body;
-  db.collection("events").insertOne(newBug, function(err, result) {
+  var newEvent = req.body;
+  db.collection("events").insertOne(newEvent, function(err, result) {
     var newId = result.insertedId;
     db.collection("events").find({_id: newId}).next(function(err, doc) {
       res.json(doc);
@@ -40,8 +40,8 @@ app.post('/api/events/', function(req, res) {
 
 app.patch('/api/events/', function(req, res) {
   console.log("Req body for patch:", req.body);
-  var newBug = req.body;
-  db.collection("events").insertOne(newBug, function(err, result) {
+  var newEvent = req.body;
+  db.collection("events").insertOne(newEvent, function(err, result) {
     var newId = result.insertedId;
     db.collection("events").find({_id: newId}).next(function(err, doc) {
       res.json(doc);
