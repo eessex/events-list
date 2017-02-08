@@ -223,8 +223,6 @@ const EventEdit = React.createClass({
           <div className='form-group all-day'>
             <input type='checkbox'
               name='all_day'
-              id='all_day'
-              value={this.state.event.all_day}
               checked={this.state.event.all_day}
               onChange={this.onInputChange} />
               <label>All Day Event</label>
