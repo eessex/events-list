@@ -11,13 +11,22 @@ const EventEdit = React.createClass({
       event: {
         start_date: '',
         end_date: '',
+        all_day: false,
         title: '',
         description: '',
         venue: '',
-        organizer: ''
+        organizer: '',
+        images: [],
+        slugs: [],
+        urls: [],
+        published: false,
       },
       url: '',
-      image: ''
+      image: '',
+      start_date: '',
+      start_time: '',
+      end_date: '',
+      end_time: ''
     };
   },
   componentDidMount() {
@@ -30,30 +39,53 @@ const EventEdit = React.createClass({
   },
   loadEvent() {
     $.ajax('/api/events/' + this.props.params.id).done(function(event) {
-      if (event.end_date) {
-        var end_time = moment(event.end_date).format('HH:mm')
+      var start_date
+      var start_time
+      var end_date
+      var end_time
+      debugger
+      if (event.start_date) {
+        start_date = moment(event.start_date).format('YYYY-MM-DD')
+        start_time = moment(event.start_date).format('HH:mm')
       } else {
-        var end_time = ''
+        start_date = ''
+        start_time = ''
+      }
+      if (event.end_date) {
+        end_date = moment(event.end_date).format('YYYY-MM-DD')
+        end_time = moment(event.end_date).format('HH:mm')
+      } else {
+        end_date = ''
+        end_time = ''
       }
       this.setState({
         event: event,
-        start_time: moment(event.start_date).format('HH:mm'),
+        start_date: start_date,
+        start_time: start_time,
+        end_date: end_date,
         end_time: end_time
       })
     }.bind(this))
   },
 
   onInputChange(e) {
+    debugger
     const changed = e.target.name
-    const newState = this.state
+    const state = this.state
     if (changed == 'all_day') {
-      newState.event.all_day = e.target.checked
-    } else if (changed != 'start_time' || 'end_time' || 'url' || 'image') {
-      newState.event[changed] = e.target.value
+      state.event.all_day = e.target.checked
+    } else if (
+      changed != 'start_date' &&
+      changed != 'start_time' &&
+      changed != 'end_time' &&
+      changed != 'url' &&
+      changed != 'image') {
+      state.event[changed] = e.target.value
     } else {
-      newState[changed] = e.target.value
+      debugger
+      state[changed] = e.target.value
     }
-    this.setState({newState})
+    this.setState({state})
   },
 
   getSlug(event) {
@@ -85,6 +117,7 @@ const EventEdit = React.createClass({
     this.setState({successVisible: false})
   },
   formatDateInput() {
+    debugger
     const form = document.forms.EventEdit
     var all_day = false
     if (form.all_day.checked) {
@@ -110,6 +143,7 @@ const EventEdit = React.createClass({
   submit(e) {
     e.preventDefault()
     const date = this.formatDateInput()
+    debugger
     const event = {
       title: this.state.event.title,
       start_date: moment(date.start_date).toISOString(),
@@ -163,13 +197,13 @@ const EventEdit = React.createClass({
     var format_time = ''
     var time
     if (date == 'start') {
-      if (this.state.event.start_date) {
-        format_date = moment(this.state.event.start_date).format('YYYY-MM-DD')
+      if (this.state.start_date) {
+        format_date = moment(this.state.start_date).format('YYYY-MM-DD')
       }
       format_time = this.state.start_time
     } else {
-      if (this.state.event.end_date) {
-        format_date = moment(this.state.event.end_date).format('YYYY-MM-DD')
+      if (this.state.end_date) {
+        format_date = moment(this.state.end_date).format('YYYY-MM-DD')
       }
       format_time = this.state.end_time
     }
@@ -200,6 +234,11 @@ const EventEdit = React.createClass({
     if (this.state.event.images) {
       images = this.state.event.images
     }
+    if (this.state.event.all_day) {
+      var all_day = 'checked'
+    } else {
+      var all_day = false
+    }
     return (
       <div className='event--edit'>
         <h2>Edit event: {this.state.event.title}</h2>
@@ -223,7 +262,7 @@ const EventEdit = React.createClass({
           <div className='form-group all-day'>
             <input type='checkbox'
               name='all_day'
-              checked={this.state.event.all_day}
+              checked={all_day}
               onChange={this.onInputChange} />
               <label>All Day Event</label>
           </div>

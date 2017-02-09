@@ -28,7 +28,7 @@ app.get('/api/events', function(req, res) {
 app.use(bodyParser.json());
 
 app.post('/api/events/', function(req, res) {
-  console.log("Req body:", req.body);
+  console.log("New event:", req.body);
   var newEvent = req.body;
   db.collection("events").insertOne(newEvent, function(err, result) {
     var newId = result.insertedId;
@@ -38,16 +38,33 @@ app.post('/api/events/', function(req, res) {
   });
 });
 
-app.patch('/api/events/', function(req, res) {
-  console.log("Req body for patch:", req.body);
-  var newEvent = req.body;
-  db.collection("events").insertOne(newEvent, function(err, result) {
-    var newId = result.insertedId;
-    db.collection("events").find({_id: newId}).next(function(err, doc) {
-      res.json(doc);
+app.patch('/api/events/:id', function (req, res) {
+  console.log("Update Event:", req.body);
+  var updateEvent = req.body;
+  var id = req.params.id;
+  db.collection("events").update({_id: ObjectId(id)}, {$set: updateEvent}, function(err, result) {
+    db.collection("events").find({_id: ObjectId(id)}).next(function(err, doc) {
+      console.log('successfully saved')
+      res.send(doc);
     });
   });
 });
+
+// app.patch('/api/events/:id', function(req, res) {
+//   console.log("Req body for patch:", req.body);
+//   var updateEvent = req.body;
+//   var id = req.params.id;
+//   db.collection("events").update({
+//     _id  : ObjectId(id)
+//   }, {$set: updateEvent}).next(function(err, doc) {
+//       res.json(doc);
+//     });
+//   // db.collection("events").insertOne(newEvent, function(err, result) {
+//   //   var newId = result.insertedId;
+//   //   db.collection("events").find({_id: newId}).next(function(err, doc) {
+//   //     res.json(doc);
+//   //   });
+// });
 
 app.get('/api/events/:id', function(req, res) {
   db.collection("events").findOne({_id: ObjectId(req.params.id)}, function(err, event) {
@@ -61,16 +78,16 @@ app.delete('/api/events/:id', function(req, res) {
   db.collection("events").deleteOne({_id: oid});
 });
 
-app.put('/api/events/:id', function(req, res) {
-  var event = req.body;
-  console.log("Modifying event:", req.params.id, event);
-  var oid = ObjectId(req.params.id);
-  db.collection("events").updateOne({_id: oid}, event, function(err, result) {
-    db.collection("events").find({_id: oid}).next(function(err, doc) {
-      res.send(doc);
-    });
-  });
-});
+// app.put('/api/events/:id', function(req, res) {
+//   var event = req.body;
+//   console.log("New event:", req.params.id, event);
+//   var oid = ObjectId(req.params.id);
+//   db.collection("events").updateOne({_id: oid}, event, function(err, result) {
+//     db.collection("events").find({_id: oid}).next(function(err, doc) {
+//       res.send(doc);
+//     });
+//   });
+// });
 
 
 
