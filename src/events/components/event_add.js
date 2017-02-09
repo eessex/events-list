@@ -64,34 +64,34 @@ const EventAdd = React.createClass({
     event.slug = slug
     event.slugs = [slug]
     this.props.addEvent(event);
-    form.title.value = ""; form.venue.value = ""; form.organizer.value = "";
-    form.start_date.value = ""; form.start_time.value = "";
-    form.end_date.value = ""; form.end_time.value = ""; form.all_day.value = !form.all_day.value;
-    form.description.value = ""; form.url.value = ""; form.image.value = "";
+    form.title.value = ''; form.venue.value = ''; form.organizer.value = '';
+    form.start_date.value = ''; form.start_time.value = '';
+    form.end_date.value = ''; form.end_time.value = ''; form.all_day.value = !form.all_day.value;
+    form.description.value = ''; form.url.value = ''; form.image.value = '';
    },
   hideTime(e) {
     $('input[type=time]').toggle('display')
   },
   render() {
     return (
-      <div className="event--add">
+      <div className='event--add'>
         <h3>New Event</h3>
-        <form name="EventAdd" className="event--add__form">
-          <input type="text" name="title" placeholder="Title" />
+        <form name='EventAdd' className='event--add__form'>
+          <input type='text' name='title' placeholder='Title' />
           <div className='event--add__time'>
-            <input type="date" name="start_date" />
-            <input type="time" name="start_time" />
-            <input type="date" name="end_date" />
-            <input type="time" name="end_time" />
+            <input type='date' name='start_date' required='required' />
+            <input type='time' name='start_time' />
+            <input type='date' name='end_date' />
+            <input type='time' name='end_time' />
             <span className='all-day'>
-              <input type="checkbox" name="all_day" onClick={this.hideTime} />
+              <input type='checkbox' name='all_day' onClick={this.hideTime} />
             </span>
           </div>
-          <input type="text" name="venue" placeholder="Venue" />
-          <input type="text" name="organizer" placeholder="Organizer" />
-          <textarea name="description" placeholder="Description" />
-          <input type="text" name="url" placeholder="External link" />
-          <input type="text" name="image" placeholder="Image" />
+          <input type='text' name='venue' placeholder='Venue' />
+          <input type='text' name='organizer' placeholder='Organizer' />
+          <textarea name='description' placeholder='Description' />
+          <input type='text' name='url' placeholder='External link' />
+          <input type='text' name='image' placeholder='Image' />
           <button onClick={this.handleSubmit}>Add Event</button>
         </form>
       </div>
