@@ -39,41 +39,40 @@ const EventEdit = React.createClass({
   },
   loadEvent() {
     $.ajax('/api/events/' + this.props.params.id).done(function(event) {
-      var start_date
-      var start_time
-      var end_date
-      var end_time
-      debugger
-      if (event.start_date) {
-        start_date = moment(event.start_date).format('YYYY-MM-DD')
-        start_time = moment(event.start_date).format('HH:mm')
-      } else {
-        start_date = ''
-        start_time = ''
-      }
-      if (event.end_date) {
-        end_date = moment(event.end_date).format('YYYY-MM-DD')
-        end_time = moment(event.end_date).format('HH:mm')
-      } else {
-        end_date = ''
-        end_time = ''
-      }
+      var date = this.loadFormattedDates(event)
       this.setState({
         event: event,
-        start_date: start_date,
-        start_time: start_time,
-        end_date: end_date,
-        end_time: end_time
+        start_date: date.start_date,
+        start_time: date.start_time,
+        end_date: date.end_date,
+        end_time: date.end_time
       })
     }.bind(this))
   },
-
+  loadFormattedDates(event) {
+    var start_date = ''
+    var start_time = ''
+    var end_date = ''
+    var end_time = ''
+    if (event.start_date) {
+      start_date = moment(event.start_date).format('YYYY-MM-DD')
+      start_time = moment(event.start_date).format('HH:mm')
+    }
+    if (event.end_date) {
+      end_date = moment(event.end_date).format('YYYY-MM-DD')
+      end_time = moment(event.end_date).format('HH:mm')
+    }
+    if (event.all_day) {
+      $('input[type=time]').toggle('display')
+    }
+    return {start_date, start_time, end_date, end_time}
+  },
   onInputChange(e) {
-    debugger
     const changed = e.target.name
     const state = this.state
     if (changed == 'all_day') {
       state.event.all_day = e.target.checked
+      $('input[type=time]').toggle('display')
     } else if (
       changed != 'start_date' &&
       changed != 'start_time' &&
@@ -82,7 +81,6 @@ const EventEdit = React.createClass({
       changed != 'image') {
       state.event[changed] = e.target.value
     } else {
-      debugger
       state[changed] = e.target.value
     }
     this.setState({state})
@@ -117,7 +115,6 @@ const EventEdit = React.createClass({
     this.setState({successVisible: false})
   },
   formatDateInput() {
-    debugger
     const form = document.forms.EventEdit
     var all_day = false
     if (form.all_day.checked) {
@@ -220,16 +217,23 @@ const EventEdit = React.createClass({
           </div>
     return print_date
   },
+  deleteUrl(e) {
+    const event = this.state.event
+    event.urls.splice(e.target.id)
+    this.setState({event})
+  },
+  printFormattedUrls(event) {
+    var urls = event.urls.map(function(url, i) {
+      return <span key={i} id={i} onClick={this.deleteUrl}>url</span>
+    }.bind(this));
+    return urls
+  },
   render() {
     const success = (
       <div className='modal alert--success' onClick={this.dismissSuccess}>
         <h1>Changes saved.</h1>
       </div>
     );
-    let urls = []
-    if (this.state.event.urls) {
-      urls = this.state.event.urls
-    }
     let images = []
     if (this.state.event.images) {
       images = this.state.event.images
@@ -295,6 +299,7 @@ const EventEdit = React.createClass({
               placeholder='External Link'
               value={this.state.url}
               onChange={this.onInputChange} />
+              {this.printFormattedUrls(this.state.event)}
           </div>
           <div className='form-group'>
             <label>External Link:</label>
