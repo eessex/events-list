@@ -17,15 +17,18 @@ import EventContainer from './events/event/event_container.js';
 
 import Info from './pages/info.js';
 import NotFound from './pages/error_404.js';
+
 import TestEditor from './draft_experiments/test_editor.js';
 import LinkEditorExample from './draft_experiments/examples/link_example.js';
-import HTMLConvertExample from './draft_experiments/examples/convert_example.js';
+import EntityEditorExample from './draft_experiments/examples/convert_example.js';
+import MediaEditorExample from './draft_experiments/examples/media_example.js';
+
 
 render(
   ( <Router history={browserHistory}>
       <Route path="/" component={Main}>
         <IndexRoute component={TestEditor} />
-        <Route path="info" component={Info}/>
+        <Route path="info" component={EntityEditorExample}/>
         <Route path="events" component={EventContainer}>
           <IndexRoute component={EventsList} />
           <Route path="/events/:id" component={EventEdit}/>

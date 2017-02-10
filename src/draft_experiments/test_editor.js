@@ -10,6 +10,8 @@ import { convertToRaw,
 
 import {stateToHTML} from 'draft-js-export-html'
 
+import { Link, Artist, findLinkEntities, findArtistEntities, block_styles } from './draft_blocks.js'
+
 const sampleMarkup =
   '<b>Bold text</b>, <i>Italic text</i><br/ ><br />' +
   '<a href="http://www.facebook.com">Example link</a>' +
@@ -38,6 +40,7 @@ class TestEditor extends React.Component {
     );
 
     this.state = {
+      // if state is empty, need to make an empty editorstate
     	// editorState: EditorState.createEmpty(decorator),
       editorState: EditorState.createWithContent(state, decorator),
     	showLinkInput: false,
@@ -53,7 +56,7 @@ class TestEditor extends React.Component {
       console.log(JSON.stringify(content));
       let options = {
         blockRenderers: {
-          ARTIST: (block) => {
+          'ARTIST': (block) => {
             let data = block.getData();
             debugger
             // if (data.class === 'is-follow-link') {
@@ -81,7 +84,7 @@ class TestEditor extends React.Component {
     this.onArtistChange = (e) => this.setState({artistValue: e.target.value});
     this.confirmArtist = this._confirmArtist.bind(this);
     this.onArtistInputKeyDown = this._onArtistInputKeyDown.bind(this);
-    this.removeArtist = this._removeArtist.bind(this);
+    // this.removeArtist = this._removeArtist.bind(this);
 
     // rich text methods
     this.onTab = (e) => this._onTab(e);
@@ -89,6 +92,10 @@ class TestEditor extends React.Component {
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
 
+  }
+
+  componentDidMount() {
+    this.logState()
   }
 
   _toggleBlockType(blockType) {
@@ -105,8 +112,7 @@ class TestEditor extends React.Component {
   }
 
   _handleKeyCommand(command) {
-    const {editorState} = this.state;
-    const newState = RichUtils.handleKeyCommand(editorState, command);
+    const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
     if (newState) {
       this.onChange(newState);
       return true;
@@ -123,7 +129,7 @@ class TestEditor extends React.Component {
       const startOffset = editorState.getSelection().getStartOffset();
       const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
       const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
-
+      debugger
       let url = '';
       if (linkKey) {
         const linkInstance = contentState.getEntity(linkKey);
@@ -227,6 +233,7 @@ class TestEditor extends React.Component {
       showArtistInput: false,
       artistValue: '',
     }, () => {
+      // debugger
       setTimeout(() => this.refs.editor.focus(), 0);
     });
   }
@@ -306,7 +313,7 @@ class TestEditor extends React.Component {
               onMouseDown={this.promptForArtist}>
               Add Artist
             </button>
-            <button onMouseDown={this.removeArtist}>
+            <button onMouseDown={this.removeLink}>
               Remove Artist
             </button>
           </div>
@@ -327,53 +334,6 @@ class TestEditor extends React.Component {
   }
 }
 
-function findLinkEntities(contentBlock, callback, contentState) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK' &&
-        contentState.getEntity(entityKey).getData().className !== 'is-follow-link'
-      );
-    },
-    callback
-  );
-}
-
-function findArtistEntities(contentBlock, callback, contentState) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      debugger
-      if (entityKey) {
-        console.log('className: ' + contentState.getEntity(entityKey).getData().className)
-      }
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getData().className === 'is-follow-link'
-      );
-    },
-    callback
-  );
-}
-
-// const HANDLE_TOC = /<a name=['"]+/g;
-
-// function findToc(contentBlock, callback, contentState) {
-//   // debugger
-//   findWithRegex(HANDLE_TOC, contentBlock, callback);
-// }
-
-// function findWithRegex(regex, contentBlock, callback) {
-//   const text = contentBlock.getText();
-//   let matchArr, start;
-//   debugger
-//   while ((matchArr = regex.exec(text)) !== null) {
-//     start = matchArr.index;
-//     callback(start, start + matchArr[0].length);
-//   }
-// }
 
 function getBlockStyle(block) {
   switch (block.getType()) {
@@ -450,34 +410,6 @@ const InlineStyleControls = (props) => {
           style={type.style} />
       )}
     </div>
-  );
-};
-
-const Link = (props) => {
-  const {url} = props.contentState.getEntity(props.entityKey).getData();
-  return (
-    <a href={url} style={styles.link}>
-      {props.children}
-    </a>
-  );
-};
-
-const Artist = (props) => {
-  const {url} = props.contentState.getEntity(props.entityKey).getData();
-  debugger
-  return (
-    <a href={url} style={styles.artist} className='is-follow-link'>
-      {props.children}
-    </a>
-  );
-};
-
-const Toc = (props) => {
-  const {name} = props.contentState.getEntity(props.entityKey).getData();
-  return (
-    <a name={name} style={styles.toc}>
-      {props.children}
-    </a>
   );
 };
 

@@ -1,46 +1,92 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-        CompositeDecorator,
-        ContentBlock,
-        ContentState,
-        Editor,
-        EditorState,
-        convertFromHTML,
-        convertToRaw,
-      } from 'draft-js';
 
-class HTMLConvertExample extends React.Component {
+import {
+  convertFromRaw,
+  convertToRaw,
+  CompositeDecorator,
+  ContentState,
+  Editor,
+  EditorState,
+} from 'draft-js'
+
+const rawContent = {
+  blocks: [
+    {
+      text: (
+        'This is an "immutable" entity: Superman. Deleting any ' +
+        'characters will delete the entire entity. Adding characters ' +
+        'will remove the entity from the range.'
+      ),
+      type: 'unstyled',
+      entityRanges: [{offset: 31, length: 8, key: 'first'}],
+    },
+    {
+      text: '',
+      type: 'unstyled',
+    },
+    {
+      text: (
+        'This is a "mutable" entity: Batman. Characters may be added ' +
+        'and removed.'
+      ),
+      type: 'unstyled',
+      entityRanges: [{offset: 28, length: 6, key: 'second'}],
+    },
+    {
+      text: '',
+      type: 'unstyled',
+    },
+    {
+      text: (
+        'This is a "segmented" entity: Green Lantern. Deleting any ' +
+        'characters will delete the current "segment" from the range. ' +
+        'Adding characters will remove the entire entity from the range.'
+      ),
+      type: 'unstyled',
+      entityRanges: [{offset: 30, length: 13, key: 'third'}],
+    },
+  ],
+
+  entityMap: {
+    first: {
+      type: 'TOKEN',
+      mutability: 'IMMUTABLE',
+    },
+    second: {
+      type: 'TOKEN',
+      mutability: 'MUTABLE',
+    },
+    third: {
+      type: 'TOKEN',
+      mutability: 'SEGMENTED',
+    },
+  },
+};
+
+class EntityEditorExample extends React.Component {
   constructor(props) {
     super(props);
 
     const decorator = new CompositeDecorator([
       {
-        strategy: findLinkEntities,
-        component: Link,
+        strategy: getEntityStrategy('IMMUTABLE'),
+        component: TokenSpan,
       },
       {
-        strategy: findImageEntities,
-        component: Image,
+        strategy: getEntityStrategy('MUTABLE'),
+        component: TokenSpan,
+      },
+      {
+        strategy: getEntityStrategy('SEGMENTED'),
+        component: TokenSpan,
       },
     ]);
 
-    const sampleMarkup =
-      '<b>Bold text</b>, <i>Italic text</i><br/ ><br />' +
-      '<a href="http://www.facebook.com">Example link</a><br /><br/ >' +
-      '<img src="image.png" height="112" width="200" />';
-
-    const blocksFromHTML = convertFromHTML(sampleMarkup);
-    const state = ContentState.createFromBlockArray(
-      blocksFromHTML.contentBlocks,
-      blocksFromHTML.entityMap,
-    );
+    const blocks = convertFromRaw(rawContent);
 
     this.state = {
-      editorState: EditorState.createWithContent(
-        state,
-        decorator,
-      ),
+      editorState: EditorState.createWithContent(blocks, decorator),
     };
 
     this.focus = () => this.refs.editor.focus();
@@ -54,72 +100,55 @@ class HTMLConvertExample extends React.Component {
   render() {
     return (
       <div style={styles.root}>
-        <div style={{marginBottom: 10}}>
-          Sample HTML converted into Draft content state
-        </div>
         <div style={styles.editor} onClick={this.focus}>
           <Editor
             editorState={this.state.editorState}
             onChange={this.onChange}
-            ref="editor"
-          />
+            placeholder="Enter some text..."
+            ref="editor" />
         </div>
         <input
           onClick={this.logState}
           style={styles.button}
           type="button"
-          value="Log State"
-        />
+          value="Log State" />
       </div>
     );
   }
-}
-module.exports = HTMLConvertExample
+} module.exports = EntityEditorExample
 
-function findLinkEntities(contentBlock, callback, contentState) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      );
-    },
-    callback
+function getEntityStrategy(mutability) {
+  return function(contentBlock, callback, contentState) {
+    contentBlock.findEntityRanges(
+      (character) => {
+        const entityKey = character.getEntity();
+        if (entityKey === null) {
+          return false;
+        }
+        return contentState.getEntity(entityKey).getMutability() === mutability;
+      },
+      callback
+    );
+  };
+}
+
+function getDecoratedStyle(mutability) {
+  switch (mutability) {
+    case 'IMMUTABLE': return styles.immutable;
+    case 'MUTABLE': return styles.mutable;
+    case 'SEGMENTED': return styles.segmented;
+    default: return null;
+  }
+}
+
+const TokenSpan = (props) => {
+  const style = getDecoratedStyle(
+    props.contentState.getEntity(props.entityKey).getMutability()
   );
-}
-
-const Link = (props) => {
-  const {url} = props.contentState.getEntity(props.entityKey).getData();
   return (
-    <a href={url} style={styles.link}>
+    <span data-offset-key={props.offsetkey} style={style}>
       {props.children}
-    </a>
-  );
-};
-
-function findImageEntities(contentBlock, callback, contentState) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'IMAGE'
-      );
-    },
-    callback
-  );
-}
-
-const Image = (props) => {
-  const {
-    height,
-    src,
-    width,
-  } = props.contentState.getEntity(props.entityKey).getData();
-
-  return (
-    <img src={src} height={height} width={width} />
+    </span>
   );
 };
 
@@ -138,5 +167,17 @@ const styles = {
   button: {
     marginTop: 10,
     textAlign: 'center',
+  },
+  immutable: {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    padding: '2px 0',
+  },
+  mutable: {
+    backgroundColor: 'rgba(204, 204, 255, 1.0)',
+    padding: '2px 0',
+  },
+  segmented: {
+    backgroundColor: 'rgba(248, 222, 126, 1.0)',
+    padding: '2px 0',
   },
 };
