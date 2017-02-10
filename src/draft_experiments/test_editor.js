@@ -49,7 +49,6 @@ class TestEditor extends React.Component {
 
 		this.focus = () => this.refs.editor.focus();
     this.logState = () => {
-      debugger
       const content = convertToRaw(this.state.editorState.getCurrentContent());
       console.log(JSON.stringify(content));
       let options = {
@@ -334,7 +333,8 @@ function findLinkEntities(contentBlock, callback, contentState) {
       const entityKey = character.getEntity();
       return (
         entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
+        contentState.getEntity(entityKey).getType() === 'LINK' &&
+        contentState.getEntity(entityKey).getData().className !== 'is-follow-link'
       );
     },
     callback
@@ -346,9 +346,12 @@ function findArtistEntities(contentBlock, callback, contentState) {
     (character) => {
       const entityKey = character.getEntity();
       debugger
+      if (entityKey) {
+        console.log('className: ' + contentState.getEntity(entityKey).getData().className)
+      }
       return (
         entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'ARTIST'
+        contentState.getEntity(entityKey).getData().className === 'is-follow-link'
       );
     },
     callback
@@ -461,6 +464,7 @@ const Link = (props) => {
 
 const Artist = (props) => {
   const {url} = props.contentState.getEntity(props.entityKey).getData();
+  debugger
   return (
     <a href={url} style={styles.artist} className='is-follow-link'>
       {props.children}

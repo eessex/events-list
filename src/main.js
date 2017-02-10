@@ -16,7 +16,7 @@ const Main = React.createClass({
     	<div className='react-container'>
 	      <nav className='nav nav--main' style={nav}>
 	        <h1 className='nav--main__logo'>
-	        	<IndexLink to="/" activeClassName="active">Events List</IndexLink>
+	        	<IndexLink to="/" activeClassName="active">home</IndexLink>
 	        </h1>
 	        <ul className='nav--main__items' style={navItems}>
 	          <li><Link to="/events">Events</Link></li>
