@@ -12,12 +12,14 @@ import EventContainer from './events/event/event_container.js';
 import Info from './pages/info.js';
 import NotFound from './pages/error_404.js';
 import TestEditor from './pages/test_editor.js';
+import LinkEditorExample from './pages/link_example.js';
+import HTMLConvertExample from './pages/convert_example.js';
 
 render((
   <Router history={browserHistory}>
     <Route path="/" component={Main}>
       <IndexRoute component={TestEditor} />
-      <Route path="info" component={Info}/>
+      <Route path="info" component={HTMLConvertExample}/>
       <Route path="events" component={EventContainer}>
         <IndexRoute component={EventsList} />
         <Route path="/events/:id" component={EventEdit}/>
