@@ -149,7 +149,8 @@ const EventEdit = React.createClass({
       organizer: this.state.event.organizer,
       description: this.state.event.description,
       updated_at: moment(new Date()).toISOString(),
-      published: this.state.event.published
+      published: this.state.event.published,
+      urls: this.state.event.urls
     }
     // if (e.target.name == 'title') {
     //   const slug = this.getSlug(event)
@@ -222,9 +223,18 @@ const EventEdit = React.createClass({
     event.urls.splice(e.target.id)
     this.setState({event})
   },
+  addLink() {
+    const event = this.state.event
+    debugger
+    event.urls.push(document.forms.EventEdit.url.value)
+    this.setState({event})
+  },
   printFormattedUrls(event) {
     var urls = event.urls.map(function(url, i) {
-      return <span key={i} id={i} onClick={this.deleteUrl}>url</span>
+      return <div key={i} >
+        <span className='link'>{url}</span>
+        <span id={i} onClick={this.deleteUrl}>x</span>
+      </div>
     }.bind(this));
     return urls
   },
@@ -258,6 +268,7 @@ const EventEdit = React.createClass({
             <label>Title:</label>
             <input type='text'
               name='title'
+              required={true}
               value={this.state.event.title}
               onChange={this.onInputChange} />
           </div>
@@ -299,10 +310,11 @@ const EventEdit = React.createClass({
               placeholder='External Link'
               value={this.state.url}
               onChange={this.onInputChange} />
+              <button onClick={this.addLink}>Add</button>
               {this.printFormattedUrls(this.state.event)}
           </div>
           <div className='form-group'>
-            <label>External Link:</label>
+            <label>Images:</label>
             <input type='text'
               name='image'
               placeholder='Image'
