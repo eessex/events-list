@@ -16,7 +16,7 @@ import TestEditor from './pages/test_editor.js';
 render((
   <Router history={browserHistory}>
     <Route path="/" component={Main}>
-      <IndexRoute component={TestEditor} />
+      <IndexRoute component={EventsList} />
       <Route path="info" component={Info}/>
       <Route path="events" component={EventContainer}>
         <IndexRoute component={EventsList} />
