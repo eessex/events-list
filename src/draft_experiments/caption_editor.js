@@ -7,19 +7,16 @@ import { convertToRaw,
         Editor,
         EditorState,
         RichUtils,
-        DefaultDraftBlockRenderMap } from 'draft-js';
-import Immutable from 'immutable';
+        Modifier } from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html'
-
-import { Link, Artist, findLinkEntities, findArtistEntities, block_styles } from './draft_blocks.js'
+import Immutable from 'immutable'
 
 const sampleMarkup =
-  '<b>Bold text</b>, <i>Italic text</i><br/ ><br />' +
-  '<a href="http://www.facebook.com">Example link</a>' +
-  '<ul><li>Example list</li></ul>' +
+  '<p><b>Bold text</b>, <i>Italic text</i><br/ ></p>' +
+  '<a href="http://www.facebook.com">Example link</a> ' +
   '<a className="is-follow-link" href="http://artsy.net/artist/jeff-wall">Thing</a>';
 
-class TestEditor extends React.Component {
+class CaptionEditor extends React.Component {
   constructor(props) {
     super(props);
     const decorator = new CompositeDecorator([
@@ -27,20 +24,7 @@ class TestEditor extends React.Component {
         strategy: findLinkEntities,
         component: Link,
       },
-      // {
-      //   strategy: findArtistEntities,
-      //   component: Artist,
-      // },
     ]);
-    const blockRenderMap = Immutable.Map({
-      'MyCustomBlock': {
-        // element is used during paste or html conversion to auto match your component;
-        // it is also retained as part of this.props.children and not stripped out
-        element: 'a',
-        wrapper: <MyCustomBlock {...this.props} />
-      }
-    });
-    var extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
     //convert props into entitymap
     const blocksFromHTML = convertFromHTML(sampleMarkup);
     const state = ContentState.createFromBlockArray(
@@ -48,14 +32,21 @@ class TestEditor extends React.Component {
       blocksFromHTML.entityMap
     );
 
+		const blockRenderMap = Immutable.Map({
+		  'header-two': {
+		    element: 'h2'
+		  },
+		  'unstyled': {
+		    element: 'h2'
+		  }
+		});
+
     this.state = {
       // if state is empty, need to make an empty editorstate
     	// editorState: EditorState.createEmpty(decorator),
       editorState: EditorState.createWithContent(state, decorator),
     	showLinkInput: false,
-      showArtistInput: false,
     	linkValue: '',
-      artistValue: '',
       html: ''
     };
 
@@ -63,19 +54,7 @@ class TestEditor extends React.Component {
     this.logState = () => {
       const content = convertToRaw(this.state.editorState.getCurrentContent());
       console.log(JSON.stringify(content));
-      let options = {
-        blockRenderers: {
-          MyCustomBlock: (block) => {
-            let data = block.getData();
-            debugger
-            // if (data.class === 'is-follow-link') {
-              return '<a>' + escape(block.getText()) + '</a>';
-            // }
-          },
-        },
-      };
-
-      let html = stateToHTML(this.state.editorState.getCurrentContent(), options)
+      let html = stateToHTML(this.state.editorState.getCurrentContent())
       this.setState({html})
     }
     this.onChange = (editorState) => {
@@ -88,37 +67,32 @@ class TestEditor extends React.Component {
     this.confirmLink = this._confirmLink.bind(this);
     this.onLinkInputKeyDown = this._onLinkInputKeyDown.bind(this);
     this.removeLink = this._removeLink.bind(this);
-    //artist methods
-    this.promptForArtist = this._promptForArtist.bind(this);
-    this.onArtistChange = (e) => this.setState({artistValue: e.target.value});
-    this.confirmArtist = this._confirmArtist.bind(this);
-    this.onArtistInputKeyDown = this._onArtistInputKeyDown.bind(this);
-    // this.removeArtist = this._removeArtist.bind(this);
 
+
+    this.blockRendererFn = (block) => this._blockRendererFn(block)
     // rich text methods
-    this.onTab = (e) => this._onTab(e);
+    // this.onTab = (e) => this._onTab(e);
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
-    this.toggleBlockType = (type) => this._toggleBlockType(type);
+    // this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
-
   }
 
-  componentDidMount() {
-    this.logState()
+  _blockRendererFn(block) {
+  	debugger
   }
 
-  _toggleBlockType(blockType) {
-    this.onChange(
-      RichUtils.toggleBlockType(this.state.editorState, blockType)
-    );
-  }
+  // _toggleBlockType(blockType) {
+  //   this.onChange(
+  //     RichUtils.toggleBlockType(this.state.editorState, blockType)
+  //   );
+  // }
    _toggleInlineStyle(inlineStyle) {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle));
   }
-  _onTab(e) {
-    const maxDepth = 4;
-    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
-  }
+  // _onTab(e) {
+  //   const maxDepth = 4;
+  //   this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
+  // }
 
   _handleKeyCommand(command) {
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
@@ -155,13 +129,14 @@ class TestEditor extends React.Component {
   }
 
   _confirmLink(e) {
+  	debugger
     e.preventDefault();
     const {editorState, linkValue} = this.state;
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
       'LINK',
       'MUTABLE',
-      {url: urlValue}
+      {url: linkValue}
     );
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
@@ -195,75 +170,6 @@ class TestEditor extends React.Component {
     }
   }
 
-  _promptForArtist(e) {
-    e.preventDefault();
-    const {editorState} = this.state;
-    const selection = editorState.getSelection();
-    if (!selection.isCollapsed()) {
-      const contentState = editorState.getCurrentContent();
-      const startKey = editorState.getSelection().getStartKey();
-      const startOffset = editorState.getSelection().getStartOffset();
-      const blockWithArtistAtBeginning = contentState.getBlockForKey(startKey);
-      const artistKey = blockWithArtistAtBeginning.getEntityAt(startOffset);
-
-      let url = '';
-      if (artistKey) {
-        const artistInstance = contentState.getEntity(artistKey);
-        url = artistInstance.getData().url;
-      }
-
-      this.setState({
-        showArtistInput: true,
-        artistValue: url,
-      }, () => {
-        setTimeout(() => this.refs.artist_url.focus(), 0);
-      });
-    }
-  }
-
-  _confirmArtist(e) {
-    e.preventDefault();
-    const {editorState, artistValue} = this.state;
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(
-      'ARTIST',
-      'MUTABLE',
-      { url: artistValue,
-        className: 'is-follow-link' }
-    );
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-    this.setState({
-      editorState: RichUtils.toggleLink(
-        newEditorState,
-        newEditorState.getSelection(),
-        entityKey
-      ),
-      showArtistInput: false,
-      artistValue: '',
-    }, () => {
-      // debugger
-      setTimeout(() => this.refs.editor.focus(), 0);
-    });
-  }
-
-  _onArtistInputKeyDown(e) {
-    if (e.which === 13) {
-      this._confirmArtist(e);
-    }
-  }
-
-  _removeArtist(e) {
-    e.preventDefault();
-    const {editorState} = this.state;
-    const selection = editorState.getSelection();
-    if (!selection.isCollapsed()) {
-      this.setState({
-        editorState: RichUtils.toggleLink(editorState, selection, null),
-      });
-    }
-  }
-
   render() {
     let linkInput;
     if (this.state.showLinkInput) {
@@ -281,22 +187,6 @@ class TestEditor extends React.Component {
           </button>
         </div>;
     }
-    let artistInput;
-    if (this.state.showArtistInput) {
-      linkInput =
-        <div style={styles.urlInputContainer}>
-          <input
-            onChange={this.onArtistChange}
-            ref="artist_url"
-            style={styles.urlInput}
-            type="text"
-            value={this.state.artistValue}
-            onKeyDown={this.onArtistInputKeyDown} />
-          <button onMouseDown={this.confirmArtist}>
-            Confirm
-          </button>
-        </div>;
-    }
     return (
   		<div style={styles.root}>
     		<h1>Test Editor</h1>
@@ -304,9 +194,6 @@ class TestEditor extends React.Component {
           <InlineStyleControls
             editorState={this.state.editorState}
             onToggle={this.toggleInlineStyle} />
-          <BlockStyleControls
-            editorState={this.state.editorState}
-            onToggle={this.toggleBlockType} />
           <div style={styles.buttons}>
             <button
               onMouseDown={this.promptForLink}>
@@ -317,39 +204,23 @@ class TestEditor extends React.Component {
             </button>
           </div>
           {linkInput}
-          <div style={styles.buttons}>
-            <button
-              onMouseDown={this.promptForArtist}>
-              Add Artist
-            </button>
-            <button onMouseDown={this.removeLink}>
-              Remove Artist
-            </button>
-          </div>
-          {artistInput}
         </div>
         <div style={styles.editor} onClick={this.focus}>
 	        <Editor
 	        	ref='editor'
+	        	blockRendererFn={this.blockRendererFn}
+	        	blockRenderMap={this.blockRenderMap}
 	        	editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onTab={this.onTab}
             spellCheck={true}
-            blockRenderMap={this.extendedBlockRenderMap}
 	        	onChange={this.onChange} />
         </div>
         {this.state.html}
     	</div>
     );
   }
-}
-
-
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    default: return null;
-  }
-}
+} module.exports = CaptionEditor
 
 class StyleButton extends React.Component {
   constructor() {
@@ -359,13 +230,11 @@ class StyleButton extends React.Component {
       this.props.onToggle(this.props.style);
     };
   }
-
   render() {
     let className = 'RichEditor-styleButton';
     if (this.props.active) {
       className += ' RichEditor-activeButton';
     }
-
     return (
       <button className={className} onMouseDown={this.onToggle}>
         {this.props.label}
@@ -373,35 +242,6 @@ class StyleButton extends React.Component {
     );
   }
 }
-
-const BLOCK_TYPES = [
-  {label: 'H2', style: 'header-two'},
-  {label: 'H3', style: 'header-three'},
-  {label: 'UL', style: 'unordered-list-item'},
-  {label: 'OL', style: 'ordered-list-item'},
-];
-
-const BlockStyleControls = (props) => {
-  const {editorState} = props;
-  const selection = editorState.getSelection();
-  const blockType = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType();
-
-  return (
-    <div className="RichEditor-controls">
-      {BLOCK_TYPES.map((type) =>
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          label={type.label}
-          onToggle={props.onToggle}
-          style={type.style} />
-      )}
-    </div>
-  );
-};
 
 const InlineStyleControls = (props) => {
   var INLINE_STYLES = [
@@ -423,21 +263,27 @@ const InlineStyleControls = (props) => {
   );
 };
 
-class MyCustomBlock extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className='MyCustomBlock'>
-        {/* here, this.props.children contains a <section> container, as that was the matching element */}
-        {this.props.children}
-      </div>
-    );
-  }
+function findLinkEntities(contentBlock, callback, contentState) {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
 }
-module.exports = MyCustomBlock
+
+var Link = (props) => {
+  const {url} = props.contentState.getEntity(props.entityKey).getData().url;
+  return (
+    <a href={url} style={styles.link}>
+      {props.children}
+    </a>
+  );
+};
 
 const styles = {
   root: {
@@ -469,12 +315,4 @@ const styles = {
     color: '#3b5998',
     textDecoration: 'underline',
   },
-  artist: {
-    backgroundColor: 'yellow',
-  },
-  toc: {
-    backgroundColor: '#aaaaaa',
-  },
 };
-
-module.exports = TestEditor
