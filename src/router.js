@@ -23,12 +23,12 @@ import TestEditor from './draft_experiments/test_editor.js';
 import LinkEditorExample from './draft_experiments/examples/link_example.js';
 import EntityEditorExample from './draft_experiments/examples/convert_example.js';
 import MediaEditorExample from './draft_experiments/examples/media_example.js';
-
+import FreshCaption from './draft_experiments/fresh_caption.js';
 
 render(
   ( <Router history={browserHistory}>
       <Route path="/" component={Main}>
-        <IndexRoute component={CaptionEditor} />
+        <IndexRoute component={FreshCaption} />
         <Route path="info" component={EntityEditorExample}/>
         <Route path="events" component={EventContainer}>
           <IndexRoute component={EventsList} />
