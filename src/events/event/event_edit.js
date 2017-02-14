@@ -4,6 +4,8 @@ import $ from 'jquery'
 import moment from 'moment'
 import s from 'underscore.string'
 
+
+
 const EventEdit = React.createClass({
   getInitialState() {
     return {
@@ -19,6 +21,7 @@ const EventEdit = React.createClass({
         images: [],
         slugs: [],
         urls: [],
+        images: [],
         published: false,
       },
       url: '',
@@ -85,7 +88,32 @@ const EventEdit = React.createClass({
     }
     this.setState({state})
   },
-
+  addUrl() {
+    const event = this.state.event
+    event.urls.push(document.forms.EventEdit.url.value)
+    document.forms.EventEdit.url.value = ''
+    const url = ''
+    this.setState({event, url})
+  },
+  deleteUrl(e) {
+    const event = this.state.event
+    event.urls.splice(e.target.id)
+    this.setState({event})
+    this.submit(e)
+  },
+  addImage() {
+    const event = this.state.event
+    event.images.push({url: document.forms.EventEdit.image.value})
+    const image = ''
+    document.forms.EventEdit.image.value = ''
+    this.setState({event, image})
+  },
+  deleteImage(e) {
+    const event = this.state.event
+    event.images.splice(e.target.id)
+    this.setState({event})
+    this.submit(e)
+  },
   getSlug(event) {
     const slug = s.slugify(event.title)
     const match = _.where(this.props.events, {slug: slug})
@@ -131,16 +159,9 @@ const EventEdit = React.createClass({
     }
     return date
   },
-  onImageChange() {
-    // update the images array
-  },
-  onUrlChange() {
-    // update the url array
-  },
   submit(e) {
     e.preventDefault()
     const date = this.formatDateInput()
-    debugger
     const event = {
       title: this.state.event.title,
       start_date: moment(date.start_date).toISOString(),
@@ -150,13 +171,10 @@ const EventEdit = React.createClass({
       description: this.state.event.description,
       updated_at: moment(new Date()).toISOString(),
       published: this.state.event.published,
-      urls: this.state.event.urls
+      urls: this.state.event.urls,
+      images: this.state.event.images
     }
-    // if (e.target.name == 'title') {
-    //   const slug = this.getSlug(event)
-    //   newState.event.slugs.push(slug)
-    //   newState.event.slug = slug
-    // }
+// update slug if title has changed
     if (date.end_date) {
       event.end_date = moment(date.end_date).toISOString()
     }
@@ -218,25 +236,17 @@ const EventEdit = React.createClass({
           </div>
     return print_date
   },
-  deleteUrl(e) {
-    const event = this.state.event
-    event.urls.splice(e.target.id)
-    this.setState({event})
-  },
-  addLink() {
-    const event = this.state.event
-    debugger
-    event.urls.push(document.forms.EventEdit.url.value)
-    this.setState({event})
-  },
   printFormattedUrls(event) {
     var urls = event.urls.map(function(url, i) {
-      return <div key={i} >
-        <span className='link'>{url}</span>
-        <span id={i} onClick={this.deleteUrl}>x</span>
-      </div>
+      return <span key={i} id={i} onClick={this.deleteUrl}>{url} <span id={i} className='delete'>x</span></span>
     }.bind(this));
     return urls
+  },
+  printFormattedImages(event) {
+    var images = event.images.map(function(image, i) {
+      return <span key={i} id={i} onClick={this.deleteImage}>{image.url} <span id={i} className='delete'>x</span></span>
+    }.bind(this));
+    return images
   },
   render() {
     const success = (
@@ -244,10 +254,6 @@ const EventEdit = React.createClass({
         <h1>Changes saved.</h1>
       </div>
     );
-    let images = []
-    if (this.state.event.images) {
-      images = this.state.event.images
-    }
     if (this.state.event.all_day) {
       var all_day = 'checked'
     } else {
@@ -310,8 +316,8 @@ const EventEdit = React.createClass({
               placeholder='External Link'
               value={this.state.url}
               onChange={this.onInputChange} />
-              <button onClick={this.addLink}>Add</button>
-              {this.printFormattedUrls(this.state.event)}
+            <button type='url' className='add' onClick={this.addUrl}>New</button>
+            {this.printFormattedUrls(this.state.event)}
           </div>
           <div className='form-group'>
             <label>Images:</label>
@@ -320,6 +326,8 @@ const EventEdit = React.createClass({
               placeholder='Image'
               value={this.state.image}
               onChange={this.onInputChange} />
+              <button type='image' className='add' onClick={this.addImage}>New</button>
+              {this.printFormattedImages(this.state.event)}
           </div>
           <button type='submit'>Submit</button>
           <button onClick={this.deleteEvent}>Delete</button>
