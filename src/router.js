@@ -18,18 +18,17 @@ import EventContainer from './events/event/event_container.js';
 import Info from './pages/info.js';
 import NotFound from './pages/error_404.js';
 
-import CaptionEditor from './draft_experiments/caption_editor.js';
 import TestEditor from './draft_experiments/test_editor.js';
 import LinkEditorExample from './draft_experiments/examples/link_example.js';
 import EntityEditorExample from './draft_experiments/examples/convert_example.js';
 import MediaEditorExample from './draft_experiments/examples/media_example.js';
-import FreshCaption from './draft_experiments/fresh_caption.js';
+import InputCaption from './draft_experiments/input_caption.js';
 
 render(
   ( <Router history={browserHistory}>
       <Route path="/" component={Main}>
-        <IndexRoute component={FreshCaption} />
-        <Route path="info" component={EntityEditorExample}/>
+        <IndexRoute component={InputCaption} />
+        <Route path="info" component={TestEditor}/>
         <Route path="events" component={EventContainer}>
           <IndexRoute component={EventsList} />
           <Route path="/events/:id" component={EventEdit}/>
