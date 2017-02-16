@@ -72,10 +72,17 @@ const EventEdit = React.createClass({
   },
   onInputChange(e) {
     const changed = e.target.name
+    debugger
     const state = this.state
     if (changed == 'all_day') {
       state.event.all_day = e.target.checked
       $('input[type=time]').toggle('display')
+    } else if (changed == 'published') {
+      if (e.target.value == 'true') {
+        state.event[changed] = true
+      } else {
+        state.event[changed] = false
+      }
     } else if (
       changed != 'start_date' &&
       changed != 'start_time' &&
@@ -237,16 +244,20 @@ const EventEdit = React.createClass({
     return print_date
   },
   printFormattedUrls(event) {
-    var urls = event.urls.map(function(url, i) {
-      return <span key={i} id={i} onClick={this.deleteUrl}>{url} <span id={i} className='delete'>x</span></span>
-    }.bind(this));
-    return urls
+    if (event.urls && event.urls.length > 0) {
+      var urls = event.urls.map(function(url, i) {
+        return <span key={i} id={i} onClick={this.deleteUrl}>{url} <span id={i} className='delete'>x</span></span>
+      }.bind(this));
+      return urls
+    }
   },
   printFormattedImages(event) {
-    var images = event.images.map(function(image, i) {
-      return <span key={i} id={i} onClick={this.deleteImage}>{image.url} <span id={i} className='delete'>x</span></span>
-    }.bind(this));
-    return images
+    if (event.images && event.images.length > 0) {
+      var images = event.images.map(function(image, i) {
+        return <span key={i} id={i} onClick={this.deleteImage}>{image.url} <span id={i} className='delete'>x</span></span>
+      }.bind(this));
+      return images
+    }
   },
   render() {
     const success = (
@@ -265,7 +276,7 @@ const EventEdit = React.createClass({
         <form onSubmit={this.submit} name='EventEdit' className='event--edit__form'>
           <div className='form-group published'>
             <label>Status:</label>
-            <select value={this.state.event.published} onChange={this.onInputChange}>
+            <select name='published' value={this.state.event.published} onChange={this.onInputChange}>
               <option value={false}>Draft</option>
               <option value={true}>Published</option>
             </select>

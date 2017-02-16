@@ -55,7 +55,7 @@ const EventAdd = React.createClass({
       urls: [form.url.value],
       images: [{url: form.image.value}],
       created_at: moment(new Date()).toISOString(),
-      published: 0
+      published: false
     }
     if (date.end_date) {
       event.end_date = moment(date.end_date).toISOString()

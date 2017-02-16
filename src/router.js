@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history'
 import Main from './main.js';
 
 import EventsList from './events/events/events_list.js';
+import EventsNew from './events/components/event_add.js';
 import EventEdit from './events/event/event_edit.js';
 import EventContainer from './events/event/event_container.js';
 
@@ -13,13 +14,15 @@ import Info from './pages/info.js';
 import NotFound from './pages/error_404.js';
 import TestEditor from './pages/test_editor.js';
 
-render((
+render(
+  (
   <Router history={browserHistory}>
     <Route path="/" component={Main}>
       <IndexRoute component={EventsList} />
       <Route path="info" component={Info}/>
       <Route path="events" component={EventContainer}>
         <IndexRoute component={EventsList} />
+        <Route path="/events/new" component={EventsNew}/>
         <Route path="/events/:id" component={EventEdit}/>
       </Route>
       <Route path="*" component={NotFound}/>
