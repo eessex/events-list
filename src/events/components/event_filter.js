@@ -41,8 +41,8 @@ const EventFilter = React.createClass({
           <label>Status:</label>
           <select value={this.state.published} onChange={this.onChangePublished}>
             <option value="">All</option>
-            <option value="true">Published</option>
-            <option value="false">Drafts</option>
+            <option value={true}>Published</option>
+            <option value={false}>Drafts</option>
           </select>
         </div>
         <div className="event-filter--group" style={filter}>

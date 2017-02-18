@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import $ from 'jquery'
+import _ from 'underscore'
 
 import EventAdd from '../components/event_add.js'
 import EventFilter from '../components/event_filter.js'
@@ -17,27 +18,46 @@ const EventsList = React.createClass({
 	},
 
   componentDidUpdate(prevProps) {
-    const oldQuery = prevProps.location.query;
-    const newQuery = this.props.location.query;
-    if (oldQuery.priority === newQuery.priority &&
-        oldQuery.published === newQuery.published) {
-      return;
-    } else {
-      this.loadEvents();
-    }
+    // const oldQuery = prevProps.location.query;
+    // const newQuery = this.props.location.query;
+    // debugger
+    // if (oldQuery.published === newQuery.published) {
+    //   if (newQuery.published == 'true') {
+    //     newQuery.published = true
+    //   } else if (newQuery.published == 'false') {
+    //     newQuery.published = false
+    //   }
+    //   _.once(this.filterList(newQuery))
+    //   return;
+    // } else {
+    //   debugger
+    //   this.loadEvents();
+    // }
   },
 
-	loadEvents() {
-	  const query = this.props.location.query || {};
-    const filter = {priority: query.priority, published: query.published};
-
-	  $.ajax('/api/events', {data: filter}).done(function(data) {
+	loadEvents(cb=->, filter) {
+	  $.ajax('/api/events').done(function(data) {
       this.setState({events: data});
+      cb()
   	}.bind(this));
 	},
 
   changeFilter(newFilter) {
     this.props.router.push({search: '?' + $.param(newFilter)});
+    if (newFilter.published == 'true') {
+      newFilter.published = true
+    } else if (newFilter.published == 'false') {
+      newFilter.published = false
+    }
+    this.loadEvents(this.filterList, newFilter)
+    // this.filterList(newFilter)
+  },
+
+
+
+  filterList(filter) {
+    var events = _.where(this.state.events, filter)
+    this.setState({events})
   },
 
 	addEvent(event) {
