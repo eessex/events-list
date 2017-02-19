@@ -1,5 +1,13 @@
-#compile
-gulp watch
+###Install node_modules
+```npm install```
 
-#start server
-node webapp.js
+###Establish Database connection
+```mongod```
+
+###Compile assets
+```gulp watch```
+
+###Start server
+```node webapp.js```
+
+Find me at http://localhost:3000
