@@ -285,6 +285,7 @@ const EventEdit = React.createClass({
             <label>Title:</label>
             <input type='text'
               name='title'
+              required={true}
               value={this.state.event.title}
               onChange={this.onInputChange} />
           </div>

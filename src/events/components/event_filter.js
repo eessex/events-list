@@ -6,27 +6,21 @@ const EventFilter = React.createClass({
 	getInitialState() {
 		const initFilter = this.props.initFilter;
     return {
-    	published: initFilter.published,
-    	priority: initFilter.priority
+    	published: initFilter.published
     };
   },
   componentWillReceiveProps(newProps) {
-    if (newProps.initFilter.published === this.state.published
-        && newProps.initFilter.priority === this.state.priority) {
+    if (newProps.initFilter.published === this.state.published) {
       return;
     }
-    this.setState({published: newProps.initFilter.published, priority: newProps.initFilter.priority});
+    this.setState({published: newProps.initFilter.published});
   },
   onChangePublished(e) {
     this.setState({published: e.target.value});
   },
-  onChangePriority(e) {
-    this.setState({priority: e.target.value});
-  },
 
   submit(e) {
     const newFilter = {};
-    if (this.state.priority) newFilter.priority = this.state.priority;
     if (this.state.published) newFilter.published = this.state.published;
     this.props.submitHandler(newFilter);
   },
@@ -43,15 +37,6 @@ const EventFilter = React.createClass({
             <option value="">All</option>
             <option value={true}>Published</option>
             <option value={false}>Drafts</option>
-          </select>
-        </div>
-        <div className="event-filter--group" style={filter}>
-          <label>Priority:</label>
-          <select value={this.state.priority} onChange={this.onChangePriority}>
-            <option value="">All</option>
-            <option value="P1">P1</option>
-            <option value="P2">P2</option>
-            <option value="P3">P3</option>
           </select>
         </div>
         <button onClick={this.submit}>Filter</button>

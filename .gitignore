@@ -15,6 +15,7 @@ static/bundle.js
 !/log/.keep
 /tmp
 .byebug_history
+npm-debug.log
 
 # Ignore node packages
 /node_modules

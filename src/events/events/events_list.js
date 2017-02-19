@@ -14,46 +14,27 @@ const EventsList = React.createClass({
 		}
 	},
 	componentDidMount() {
-		this.loadEvents()
+		this.loadEvents(null, null)
 	},
 
-  componentDidUpdate(prevProps) {
-    // const oldQuery = prevProps.location.query;
-    // const newQuery = this.props.location.query;
-    // debugger
-    // if (oldQuery.published === newQuery.published) {
-    //   if (newQuery.published == 'true') {
-    //     newQuery.published = true
-    //   } else if (newQuery.published == 'false') {
-    //     newQuery.published = false
-    //   }
-    //   _.once(this.filterList(newQuery))
-    //   return;
-    // } else {
-    //   debugger
-    //   this.loadEvents();
-    // }
-  },
-
-	loadEvents(cb=->, filter) {
+	loadEvents(cb, filter) {
 	  $.ajax('/api/events').done(function(data) {
       this.setState({events: data});
-      cb()
+      if (cb) {
+        cb(filter)
+      }
   	}.bind(this));
 	},
 
   changeFilter(newFilter) {
-    this.props.router.push({search: '?' + $.param(newFilter)});
+    // this.props.router.push({search: '?' + $.param(newFilter)});
     if (newFilter.published == 'true') {
       newFilter.published = true
     } else if (newFilter.published == 'false') {
       newFilter.published = false
     }
     this.loadEvents(this.filterList, newFilter)
-    // this.filterList(newFilter)
   },
-
-
 
   filterList(filter) {
     var events = _.where(this.state.events, filter)
