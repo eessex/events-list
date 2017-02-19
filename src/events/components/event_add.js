@@ -40,7 +40,22 @@ const EventAdd = React.createClass({
     }
     return date
   },
-
+  addEvent(event) {
+    console.log("Adding event:", event);
+    $.ajax({
+      type: 'POST',
+      url: '/api/events',
+      contentType: 'application/json',
+      data: JSON.stringify(event),
+      success: function(data) {
+        // forward to slug
+        console.log("Added event:", data);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log("Error adding event:", err);
+      }
+    });
+  },
   handleSubmit(e) {
     e.preventDefault();
     const form = document.forms.EventAdd;
@@ -63,7 +78,11 @@ const EventAdd = React.createClass({
     const slug = this.getSlug(event);
     event.slug = slug
     event.slugs = [slug]
-    this.props.addEvent(event);
+    if (this.props.addEvent) {
+      this.props.addEvent(event);
+    } else {
+      this.addEvent(event);
+    }
     form.title.value = ''; form.venue.value = ''; form.organizer.value = '';
     form.start_date.value = ''; form.start_time.value = '';
     form.end_date.value = ''; form.end_time.value = ''; form.all_day.value = !form.all_day.value;
