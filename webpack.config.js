@@ -11,6 +11,16 @@ function getEntrySources(sources) {
   return sources;
 }
 
+function getPath() {
+  let root;
+  if (process.env.NODE_ENV !== 'production') {
+    root = 'static/tmp'
+  } else {
+    root = 'static'
+  }
+  return root
+}
+
 module.exports = {
   entry: {
     index: getEntrySources([
@@ -20,7 +30,7 @@ module.exports = {
   output: {
     publicPath: '/',
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'static/tmp')
+    path: path.resolve(__dirname, getPath())
   },
   watch: true,
   module: {

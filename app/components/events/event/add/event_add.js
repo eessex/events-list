@@ -5,6 +5,8 @@ import _ from 'underscore'
 import s from 'underscore.string'
 import $ from 'jquery'
 
+import './event_add.scss';
+
 const EventAdd = React.createClass({
 
   getSlug(event) {
@@ -39,22 +41,6 @@ const EventAdd = React.createClass({
       date.end_date = moment(form.end_date.value + ' ' + form.end_time.value)
     }
     return date
-  },
-  addEvent(event) {
-    console.log("Adding event:", event);
-    $.ajax({
-      type: 'POST',
-      url: '/api/events',
-      contentType: 'application/json',
-      data: JSON.stringify(event),
-      success: function(data) {
-        // forward to slug
-        console.log("Added event:", data);
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.log("Error adding event:", err);
-      }
-    });
   },
   handleSubmit(e) {
     e.preventDefault();

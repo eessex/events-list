@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import $ from 'jquery'
 import _ from 'underscore'
 
-import EventAdd from '../components/event_add.js'
+import EventAdd from '../event/add/event_add.js'
 import EventFilter from '../components/event_filter.js'
 import EventsTable from './events_table/events_table.js'
 

@@ -5,7 +5,7 @@ import { Router, Route, Redirect, IndexRoute, Link, browserHistory, IndexLink } 
 import Main from './components/main.js';
 
 import EventsList from './components/events/events/events_list.js';
-import EventsNew from './components/events/components/event_add.js';
+import EventsNew from './components/events/event/add/event_add.js';
 import EventEdit from './components/events/event/edit/event_edit.js';
 import EventContainer from './components/events/event/event_container.js';
 

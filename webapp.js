@@ -67,7 +67,7 @@ app.get('*', function (req, res) {
 
 MongoClient.connect('mongodb://localhost/events-list_dev_db', function(err, dbConnection) {
   db = dbConnection;
-  var server = app.listen(3000, function() {
+  var server = app.listen(process.env.PORT || 3000, function() {
     var port = server.address().port;
     console.log('Started server at port', port);
   });

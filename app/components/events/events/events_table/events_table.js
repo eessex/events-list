@@ -13,23 +13,17 @@ const EventsTable = React.createClass({
 	},
 
 	render() {
-    const headerStyle = {
-      display: 'flex',
-      justifyContent: 'space-between',
-      textAlign: 'left',
-      borderBottom: '1px solid',
-      padding: '.25em 1em'
-    }
 		return (
 			<div className='events--table'>
-        <div className='event-table__header' style={headerStyle}>
+        <div className='events--table__header h5'>
           <div className='th'>Slug</div>
+          <div className='th'>Date</div>
           <div className='th'>Title</div>
           <div className='th'>Venue</div>
           <div className='th'>Organizer</div>
           <div className='th'>Description</div>
         </div>
-        <div className='event-table__body'>
+        <div className='events--table__body'>
           {this.getEventRows()}
         </div>
 			</div>

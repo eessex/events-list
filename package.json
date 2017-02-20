@@ -4,7 +4,8 @@
   "description": "react app on mern stack for listing events",
   "main": "webapp.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node webapp.js"
   },
   "repository": {
     "type": "git",

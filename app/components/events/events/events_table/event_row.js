@@ -46,12 +46,12 @@ const EventRow = React.createClass({
 			<a className='event-table__row'
 				href={'/events/' + this.props.event._id}
 				style={rowStyle}>
-        <div>{this.props.event.slug}</div>
-        <div>{this.formatDate()}</div>
-        <div>{this.props.event.title}</div>
-        <div>{this.props.event.venue}</div>
-        <div>{this.props.event.organizer}</div>
-        <div>{this.props.event.description}</div>
+        <div className='td slug'>{this.props.event.slug}</div>
+        <div className='td date'>{this.formatDate()}</div>
+        <div className='td title'>{this.props.event.title}</div>
+        <div className='td venue'>{this.props.event.venue}</div>
+        <div className='td organizer'>{this.props.event.organizer}</div>
+        <div className='td description'>{this.props.event.description}</div>
 			</a>
 		)
 	}
