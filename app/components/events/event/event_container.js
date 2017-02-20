@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom'
 const EventContainer = React.createClass({
   render() {
     return (
-      <div className="event-container">
-	      <h5>Events</h5>
+      <div className="event-container responsive-container">
 	      {this.props.children}
       </div>
     );
