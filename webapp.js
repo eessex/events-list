@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var httpProxy = require('http-proxy');
+require('dotenv').load();
 
 var db;
 
@@ -18,7 +19,7 @@ app.use(express.static(publicPath));
 app.use(bodyParser.json());
 
 // run server
-MongoClient.connect('mongodb://localhost/events-list_dev_db', function(err, dbConnection) {
+MongoClient.connect(process.env.MONGODB_URI, function(err, dbConnection) {
   db = dbConnection;
   var server = app.listen(port, function() {
     console.log('Started server at port', port);
@@ -27,13 +28,14 @@ MongoClient.connect('mongodb://localhost/events-list_dev_db', function(err, dbCo
 
 // Bundle Dev
 if (!isProduction) {
+  console.log('in bundle, not production')
   var bundle = require('./server/bundle.js');
   bundle();
   // Any requests to localhost:3000/build is proxied
   // to webpack-dev-server
   app.all('/build/*', function (req, res) {
     proxy.web(req, res, {
-      target: 'http://localhost:8080'
+      target: 'http://localhost:8081'
     });
   });
 }

@@ -8,7 +8,7 @@ var mainPath = path.resolve(__dirname, 'app', 'index.js');
 
 function getEntrySources(sources) {
   if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-dev-server/client?http://localhost:8080');
+    sources.push('webpack-dev-server/client?http://localhost:8081');
     sources.push('webpack/hot/only-dev-server');
   }
 
