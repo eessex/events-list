@@ -16,10 +16,10 @@ static/bundle.js
 /tmp
 .byebug_history
 npm-debug.log
+static/*.hot-update.*
 
 # Ignore node packages
 /node_modules
 
-# Ignore webpack's hotload files
-
-static/*.hot-update.*
+# Ignore Env variables
+.env

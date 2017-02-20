@@ -4,7 +4,7 @@ import $ from 'jquery'
 import moment from 'moment'
 import s from 'underscore.string'
 
-
+import './event_edit.scss';
 
 const EventEdit = React.createClass({
   getInitialState() {
@@ -72,7 +72,6 @@ const EventEdit = React.createClass({
   },
   onInputChange(e) {
     const changed = e.target.name
-    debugger
     const state = this.state
     if (changed == 'all_day') {
       state.event.all_day = e.target.checked
@@ -289,14 +288,16 @@ const EventEdit = React.createClass({
               value={this.state.event.title}
               onChange={this.onInputChange} />
           </div>
-          {this.printDateInput('start')}
-          {this.printDateInput('end')}
-          <div className='form-group all-day'>
-            <input type='checkbox'
-              name='all_day'
-              checked={all_day}
-              onChange={this.onInputChange} />
-              <label>All Day Event</label>
+          <div className='field-group dates'>
+            {this.printDateInput('start')}
+            {this.printDateInput('end')}
+            <div className='form-group all-day'>
+              <input type='checkbox'
+                name='all_day'
+                checked={all_day}
+                onChange={this.onInputChange} />
+                <label>All Day Event</label>
+            </div>
           </div>
           <div className='form-group venue'>
             <label>Venue:</label>
@@ -312,7 +313,7 @@ const EventEdit = React.createClass({
               value={this.state.event.organizer}
               onChange={this.onInputChange} />
           </div>
-          <div className='form-group'>
+          <div className='form-group description'>
             <label>Description:</label>
             <textarea
               name='description'
@@ -320,28 +321,34 @@ const EventEdit = React.createClass({
               value={this.state.event.description}
               onChange={this.onInputChange} />
           </div>
-          <div className='form-group'>
-            <label>External Link:</label>
-            <input type='text'
-              name='url'
-              placeholder='External Link'
-              value={this.state.url}
-              onChange={this.onInputChange} />
-            <button type='url' className='add' onClick={this.addUrl}>New</button>
-            {this.printFormattedUrls(this.state.event)}
+          <div className='field-group urls'>
+            <div className='form-group url'>
+              <label>External Links:</label>
+              <input type='text'
+                name='url'
+                placeholder='External Link'
+                value={this.state.url}
+                onChange={this.onInputChange} />
+              <button type='url' className='add' onClick={this.addUrl}>New</button>
+              {this.printFormattedUrls(this.state.event)}
+            </div>
           </div>
-          <div className='form-group'>
-            <label>Images:</label>
-            <input type='text'
-              name='image'
-              placeholder='Image'
-              value={this.state.image}
-              onChange={this.onInputChange} />
+          <div className='field-group images'>
+            <div className='form-group'>
+              <label>Images:</label>
+              <input type='text'
+                name='image'
+                placeholder='Image'
+                value={this.state.image}
+                onChange={this.onInputChange} />
               <button type='image' className='add' onClick={this.addImage}>New</button>
               {this.printFormattedImages(this.state.event)}
+            </div>
           </div>
-          <button type='submit'>Submit</button>
-          <button onClick={this.deleteEvent}>Delete</button>
+          <div className='actions'>
+            <button type='submit'>Submit</button>
+            <button onClick={this.deleteEvent}>Delete</button>
+          </div>
         </form>
         {this.state.successVisible ? success : null}
       </div>
