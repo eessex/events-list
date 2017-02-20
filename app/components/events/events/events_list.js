@@ -61,10 +61,12 @@ const EventsList = React.createClass({
 
 	render() {
 		return (
-			<div className='event--list'>
-        <EventFilter
-          submitHandler={this.changeFilter}
-          initFilter={this.props.location.query} />
+			<div className='events--list'>
+        <div className='responsive-container'>
+          <EventFilter
+            submitHandler={this.changeFilter}
+            initFilter={this.props.location.query} />
+        </div>
 				<EventsTable
 					events={this.state.events} />
         <EventAdd

@@ -5,7 +5,6 @@ const EventContainer = React.createClass({
   render() {
     return (
       <div className="event-container">
-	      <h5>Events</h5>
 	      {this.props.children}
       </div>
     );

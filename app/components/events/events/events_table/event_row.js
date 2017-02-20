@@ -47,7 +47,6 @@ const EventRow = React.createClass({
 				href={'/events/' + this.props.event._id}
 				style={rowStyle}>
         <div>{this.props.event.slug}</div>
-        <div>{this.props.event.published}</div>
         <div>{this.formatDate()}</div>
         <div>{this.props.event.title}</div>
         <div>{this.props.event.venue}</div>

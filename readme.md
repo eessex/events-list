@@ -5,7 +5,7 @@
 ```mongod```
 
 ###Compile assets
-```gulp watch```
+```webpack-dev-server```
 
 ###Start server
 ```node webapp.js```
