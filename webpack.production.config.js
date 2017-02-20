@@ -6,38 +6,13 @@ var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var buildPath = path.resolve(__dirname, 'public', 'build');
 var mainPath = path.resolve(__dirname, 'app', 'index.js');
 
-function getEntrySources(sources) {
-  if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-dev-server/client?http://localhost:8080');
-    sources.push('webpack/hot/only-dev-server');
-  }
-
-  return sources;
-}
-
-function getPath() {
-  let root;
-  if (process.env.NODE_ENV !== 'production') {
-    root = 'public/build'
-  } else {
-    root = 'public'
-  }
-  return root
-}
-
 const config = {
-  devtool: 'cheap-module-source-map',
-  entry: {
-    index: getEntrySources([
-      mainPath,
-    ])
-  },
+  devtool: 'source-map',
+  entry: mainPath,
   output: {
     filename: 'bundle.js',
-    path: buildPath,
-    publicPath: '/public/',
+    path: buildPath
   },
-  watch: true,
   module: {
     loaders: [
       {
@@ -50,12 +25,11 @@ const config = {
       {
         test: /\.js?$/,
         exclude: [nodeModulesPath],
-        loaders: ['react-hot-loader', 'babel-loader']
+        loader: 'babel-loader'
       }
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('style.css'),
     new webpack.DefinePlugin({
       'process.env': {
@@ -66,5 +40,3 @@ const config = {
 };
 
 module.exports = config;
-
-resolveLoader: { root: path.join(__dirname, "node_modules") }

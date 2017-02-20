@@ -8,6 +8,6 @@ mongod
 webpack
 
 #### Start server
-node webapp.js
+npm start
 
 Find me at http://localhost:3000
