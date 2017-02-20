@@ -20,14 +20,17 @@ module.exports = {
   output: {
     publicPath: '/',
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'static')
+    path: path.resolve(__dirname, 'static/tmp')
   },
   watch: true,
   module: {
     loaders: [
       {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
       },
       {
         test: /\.js?$/,
@@ -38,7 +41,7 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('app/static/style.css')
+    new ExtractTextPlugin('style.css')
   ]
 };
 

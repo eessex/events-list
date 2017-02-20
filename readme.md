@@ -1,13 +1,13 @@
-###Install node_modules
-```npm install```
+#### Install node_modules
+npm install
 
-###Establish Database connection
-```mongod```
+#### Establish Database connection
+mongod
 
-###Compile assets
-```webpack-dev-server```
+#### Compile assets
+webpack
 
-###Start server
-```node webapp.js```
+#### Start server
+node webapp.js
 
 Find me at http://localhost:3000

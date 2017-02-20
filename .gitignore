@@ -4,19 +4,14 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config.
-/.bundle
-static/App.js
-static/events
-static/bundle.js
-
 # Ignore all logfiles and tempfiles.
 /log/*
 !/log/.keep
 /tmp
 .byebug_history
 npm-debug.log
-static/*.hot-update.*
+static/tmp*
+.DS_Store
 
 # Ignore node packages
 /node_modules
