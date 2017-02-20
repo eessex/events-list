@@ -20,4 +20,6 @@ npm-debug.log
 # Ignore node packages
 /node_modules
 
+# Ignore webpack's hotload files
 
+static/*.hot-update.*

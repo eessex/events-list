@@ -69,10 +69,12 @@ const EventsList = React.createClass({
         </div>
 				<EventsTable
 					events={this.state.events} />
-        <EventAdd
-          events={this.state.events}
-          addEvent={this.addEvent} />
-			</div>
+        <div className='responsive-container'>
+          <EventAdd
+            events={this.state.events}
+            addEvent={this.addEvent} />
+  			</div>
+      </div>
 		)
 	}
 })

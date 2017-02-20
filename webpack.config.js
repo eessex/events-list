@@ -18,7 +18,7 @@ module.exports = {
     ])
   },
   output: {
-    publicPath: 'http://localhost:8080/',
+    publicPath: '/',
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'static')
   },
