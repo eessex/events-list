@@ -1,7 +1,7 @@
 #### Install node_modules
 npm install
 
-### Environment
+#### Environment
 Create a .env file including your database name:
 MONGODB_URI=mongodb://localhost/MyDBName
 
