@@ -3,11 +3,11 @@ var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
-var buildPath = path.resolve(__dirname, 'public', 'build');
+var buildPath = path.resolve(__dirname, 'public');
 var mainPath = path.resolve(__dirname, 'app', 'index.js');
 
 const config = {
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   entry: mainPath,
   output: {
     filename: 'bundle.js',

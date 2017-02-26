@@ -4,26 +4,15 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
-var buildPath = path.resolve(__dirname, 'public', 'build');
+var buildPath = path.resolve(__dirname, 'public');
 var mainPath = path.resolve(__dirname, 'app', 'index.js');
 
 function getEntrySources(sources) {
   if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-dev-server/client?http://localhost:8081');
+    sources.push('webpack-dev-server/client?http://localhost:8080');
     sources.push('webpack/hot/only-dev-server');
   }
-
   return sources;
-}
-
-function getPath() {
-  let root;
-  if (process.env.NODE_ENV !== 'production') {
-    root = 'public/build'
-  } else {
-    root = 'public/build'
-  }
-  return root
 }
 
 const config = {
@@ -65,5 +54,3 @@ const config = {
 };
 
 module.exports = config;
-
-resolveLoader: { root: path.join(__dirname, "node_modules") }

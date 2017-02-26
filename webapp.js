@@ -13,12 +13,12 @@ var app = express()
 
 var isProduction = process.env.NODE_ENV === 'production';
 var port = isProduction ? process.env.PORT : 3000;
-var publicPath = path.resolve(__dirname, 'public/build');
+var publicPath = path.resolve(__dirname, 'public');
 
 app.use(express.static(publicPath));
 app.use(bodyParser.json());
 
-// run server
+// Run server
 MongoClient.connect(process.env.MONGODB_URI, function(err, dbConnection) {
   db = dbConnection;
   var server = app.listen(port, function() {
@@ -31,9 +31,9 @@ if (!isProduction) {
   console.log('in bundle, not production')
   var bundle = require('./server/bundle.js');
   bundle();
-  // Any requests to localhost:3000/build is proxied
+  // Any requests to localhost:3000/public is proxied
   // to webpack-dev-server
-  app.all('/public/build/*', function (req, res) {
+  app.all('/public/*', function (req, res) {
     proxy.web(req, res, {
       target: 'http://localhost:8081'
     });
@@ -93,5 +93,5 @@ app.delete('/api/events/:id', function(req, res) {
 });
 
 app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, '/public', 'index.html'))
+    res.sendFile(path.join(__dirname, '/public/', 'index.html'))
  })

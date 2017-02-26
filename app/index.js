@@ -6,9 +6,7 @@ import { createBrowserHistory } from 'history';
 
 import './styles/global.scss';
 
-require("css-loader!../public/build/style.css")
-
-console.log('App is loaded...');
+console.log('App loaded.');
 
 render(<Router
 					history={browserHistory}
