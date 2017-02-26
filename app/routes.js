@@ -13,9 +13,11 @@ import Info from './components/pages/info.js';
 import NotFound from './components/pages/error_404.js';
 import TestEditor from './components/pages/test_editor.js';
 
+import EventsIndex from './components/pages/events_index.js';
+
 export default (
     <Route path="/" component={Main}>
-      <IndexRoute component={EventsList} />
+      <IndexRoute component={EventsIndex} />
       <Route path="info" component={Info}/>
       <Route path="events" component={EventContainer}>
         <IndexRoute component={EventsList} />
