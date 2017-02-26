@@ -12,7 +12,7 @@
 npm-debug.log
 static/tmp*
 .DS_Store
-/public/build/*
+/public/build/*.hot
 
 # Ignore node packages
 /node_modules

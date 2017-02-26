@@ -12,4 +12,4 @@ console.log('App is loaded...');
 
 render(<Router
 					history={browserHistory}
-					routes={routes} />, document.getElementById('main'));
+					routes={routes} />, document.body);

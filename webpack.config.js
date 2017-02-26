@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var buildPath = path.resolve(__dirname, 'public', 'build');
@@ -20,7 +21,7 @@ function getPath() {
   if (process.env.NODE_ENV !== 'production') {
     root = 'public/build'
   } else {
-    root = 'public'
+    root = 'public/build'
   }
   return root
 }
@@ -35,7 +36,7 @@ const config = {
   output: {
     filename: 'bundle.js',
     path: buildPath,
-    publicPath: '/public/',
+    publicPath: '/',
   },
   watch: true,
   module: {
@@ -55,7 +56,10 @@ const config = {
     ]
   },
   plugins: [
-    // new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Events List'
+    }),
     new ExtractTextPlugin('style.css')
   ]
 };
