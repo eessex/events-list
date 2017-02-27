@@ -1,15 +1,19 @@
 var express = require('express');
-var path = require('path')
+var path = require('path');
+var router = express.Router();
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var httpProxy = require('http-proxy');
 require('dotenv').load();
 
+//routes
+// var events = require('./routes/events')(app);
+
 var db;
 
 var proxy = httpProxy.createProxyServer();
-var app = express()
+var app = express();
 
 var isProduction = process.env.NODE_ENV === 'production';
 var port = isProduction ? process.env.PORT : 3000;
@@ -43,54 +47,57 @@ proxy.on('error', function(e) {
   console.log('Could not connect to proxy, please try again...');
 });
 
+app.use('api', require('./routes/events')());
+
+
 // API
-app.get('/api/events', function(req, res) {
-  console.log("Query string", req.query);
-  var filter = {};
-  if (req.query.priority)
-    filter.priority = req.query.priority;
-  if (req.query.published)
-    filter.published = req.query.published;
+// app.get('/api/events', function(req, res) {
+//   console.log("Query string", req.query);
+//   var filter = {};
+//   if (req.query.priority)
+//     filter.priority = req.query.priority;
+//   if (req.query.published)
+//     filter.published = req.query.published;
 
-   db.collection('events').find(filter).toArray(function(err, docs) {
-    res.json(docs);
-  });
-});
+//    db.collection('events').find(filter).toArray(function(err, docs) {
+//     res.json(docs);
+//   });
+// });
 
-app.post('/api/events/', function(req, res) {
-  console.log("New event:", req.body);
-  var newEvent = req.body;
-  db.collection("events").insertOne(newEvent, function(err, result) {
-    var id = result.insertedId;
-    db.collection("events").find({_id: id}).next(function(err, doc) {
-      res.json(doc);
-    });
-  });
-});
+// app.post('/api/events/', function(req, res) {
+//   console.log("New event:", req.body);
+//   var newEvent = req.body;
+//   db.collection("events").insertOne(newEvent, function(err, result) {
+//     var id = result.insertedId;
+//     db.collection("events").find({_id: id}).next(function(err, doc) {
+//       res.json(doc);
+//     });
+//   });
+// });
 
-app.patch('/api/events/:id', function (req, res) {
-  console.log("Update Event:", req.body);
-  var updateEvent = req.body;
-  var id = req.params.id;
-  db.collection("events").update({_id: ObjectId(id)}, {$set: updateEvent}, function(err, result) {
-    db.collection("events").find({_id: ObjectId(id)}).next(function(err, doc) {
-      console.log('successfully saved')
-      res.send(doc);
-    });
-  });
-});
+// app.patch('/api/events/:id', function (req, res) {
+//   console.log("Update Event:", req.body);
+//   var updateEvent = req.body;
+//   var id = req.params.id;
+//   db.collection("events").update({_id: ObjectId(id)}, {$set: updateEvent}, function(err, result) {
+//     db.collection("events").find({_id: ObjectId(id)}).next(function(err, doc) {
+//       console.log('successfully saved')
+//       res.send(doc);
+//     });
+//   });
+// });
 
-app.get('/api/events/:id', function(req, res) {
-  db.collection("events").findOne({_id: ObjectId(req.params.id)}, function(err, event) {
-    res.json(event);
-  });
-});
+// app.get('/api/events/:id', function(req, res) {
+//   db.collection("events").findOne({_id: ObjectId(req.params.id)}, function(err, event) {
+//     res.json(event);
+//   });
+// });
 
-app.delete('/api/events/:id', function(req, res) {
-  console.log("Deleting event:", req.params.id);
-  var id = ObjectId(req.params.id);
-  db.collection("events").deleteOne({_id: id});
-});
+// app.delete('/api/events/:id', function(req, res) {
+//   console.log("Deleting event:", req.params.id);
+//   var id = ObjectId(req.params.id);
+//   db.collection("events").deleteOne({_id: id});
+// });
 
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '/public/', 'index.html'))

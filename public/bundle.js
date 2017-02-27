@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "13b37ff044614a57dd2b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7aa77fae6db5ab826a30"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -63859,12 +63859,7 @@ function isUndefined(arg) {
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 461 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 461 */,
 /* 462 */
 /***/ (function(module, exports) {
 
@@ -78564,543 +78559,8 @@ module.exports = EventFilter;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
 
 /***/ }),
-/* 594 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-'use strict';
-
-var _react = __webpack_require__(2);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = __webpack_require__(21);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _jquery = __webpack_require__(105);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _moment = __webpack_require__(1);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-var _underscore = __webpack_require__(363);
-
-var _underscore2 = _interopRequireDefault(_underscore);
-
-__webpack_require__(461);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var EventEdit = _react2.default.createClass({
-  displayName: 'EventEdit',
-  getInitialState: function getInitialState() {
-    var _event;
-
-    return {
-      successVisible: false,
-      event: (_event = {
-        start_date: '',
-        end_date: '',
-        all_day: false,
-        title: '',
-        description: '',
-        venue: '',
-        organizer: '',
-        images: [],
-        slugs: [],
-        urls: []
-      }, _defineProperty(_event, 'images', []), _defineProperty(_event, 'published', false), _event),
-      url: '',
-      image: '',
-      start_date: '',
-      start_time: '',
-      end_date: '',
-      end_time: ''
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    this.loadEvent();
-  },
-  componentDidUpdate: function componentDidUpdate(prevProps) {
-    if (this.props.params.id != prevProps.params.id) {
-      this.loadEvent();
-    }
-  },
-  loadEvent: function loadEvent() {
-    _jquery2.default.ajax('/api/events/' + this.props.params.id).done(function (event) {
-      var date = this.loadFormattedDates(event);
-      this.setState({
-        event: event,
-        start_date: date.start_date,
-        start_time: date.start_time,
-        end_date: date.end_date,
-        end_time: date.end_time
-      });
-    }.bind(this));
-  },
-  loadFormattedDates: function loadFormattedDates(event) {
-    var start_date = '';
-    var start_time = '';
-    var end_date = '';
-    var end_time = '';
-    if (event.start_date) {
-      start_date = (0, _moment2.default)(event.start_date).format('YYYY-MM-DD');
-      start_time = (0, _moment2.default)(event.start_date).format('HH:mm');
-    }
-    if (event.end_date) {
-      end_date = (0, _moment2.default)(event.end_date).format('YYYY-MM-DD');
-      end_time = (0, _moment2.default)(event.end_date).format('HH:mm');
-    }
-    if (event.all_day) {
-      (0, _jquery2.default)('input[type=time]').toggle('display');
-    }
-    return { start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time };
-  },
-  onInputChange: function onInputChange(e) {
-    var changed = e.target.name;
-    var state = this.state;
-    if (changed == 'all_day') {
-      state.event.all_day = e.target.checked;
-      (0, _jquery2.default)('input[type=time]').toggle('display');
-    } else if (changed == 'published') {
-      if (e.target.value == 'true') {
-        state.event[changed] = true;
-      } else {
-        state.event[changed] = false;
-      }
-    } else if (changed != 'start_date' && changed != 'start_time' && changed != 'end_time' && changed != 'url' && changed != 'image') {
-      state.event[changed] = e.target.value;
-    } else {
-      state[changed] = e.target.value;
-    }
-    this.setState({ state: state });
-  },
-  addUrl: function addUrl() {
-    var event = this.state.event;
-    event.urls.push(document.forms.EventEdit.url.value);
-    document.forms.EventEdit.url.value = '';
-    var url = '';
-    this.setState({ event: event, url: url });
-  },
-  deleteUrl: function deleteUrl(e) {
-    var event = this.state.event;
-    event.urls.splice(e.target.id);
-    this.setState({ event: event });
-    this.submit(e);
-  },
-  addImage: function addImage() {
-    var event = this.state.event;
-    event.images.push({ url: document.forms.EventEdit.image.value });
-    var image = '';
-    document.forms.EventEdit.image.value = '';
-    this.setState({ event: event, image: image });
-  },
-  deleteImage: function deleteImage(e) {
-    var event = this.state.event;
-    event.images.splice(e.target.id);
-    this.setState({ event: event });
-    this.submit(e);
-  },
-  getSlug: function getSlug(event) {
-    var slug = _underscore2.default.slugify(event.title);
-    var match = _.where(this.props.events, { slug: slug });
-    if (match.length != 0) {
-      return this.incrementUniqueSlug(slug);
-    } else {
-      return _underscore2.default.slugify(event.title);
-    }
-  },
-  incrementUniqueSlug: function incrementUniqueSlug(slug) {
-    var unique = [];
-    var index = 0;
-    while (unique.length == 0) {
-      if (_.where(this.props.events, { slug: slug + '-' + index }).length) {
-        index = index + 1;
-      } else {
-        unique.push(slug + '-' + index);
-      }
-    }
-    return unique[0];
-  },
-  showSuccess: function showSuccess() {
-    this.setState({ successVisible: true });
-  },
-  dismissSuccess: function dismissSuccess() {
-    this.setState({ successVisible: false });
-  },
-  formatDateInput: function formatDateInput() {
-    var form = document.forms.EventEdit;
-    var all_day = false;
-    if (form.all_day.checked) {
-      all_day = true;
-    }
-    var start_date = (0, _moment2.default)(form.start_date.value + ' ' + form.start_time.value);
-    var date = { start_date: start_date, all_day: all_day };
-    if (form.end_date.value) {
-      if (form.end_time.value) {
-        date.end_date = (0, _moment2.default)(form.end_date.value + ' ' + form.end_time.value);
-      } else {
-        date.end_date = (0, _moment2.default)(form.end_date.value);
-      }
-    }
-    return date;
-  },
-  submit: function submit(e) {
-    e.preventDefault();
-    var date = this.formatDateInput();
-    var event = {
-      title: this.state.event.title,
-      start_date: (0, _moment2.default)(date.start_date).toISOString(),
-      all_day: date.all_day,
-      venue: this.state.event.venue,
-      organizer: this.state.event.organizer,
-      description: this.state.event.description,
-      updated_at: (0, _moment2.default)(new Date()).toISOString(),
-      published: this.state.event.published,
-      urls: this.state.event.urls,
-      images: this.state.event.images
-    };
-    // update slug if title has changed
-    if (date.end_date) {
-      event.end_date = (0, _moment2.default)(date.end_date).toISOString();
-    }
-    _jquery2.default.ajax({
-      url: '/api/events/' + this.props.params.id,
-      type: 'PATCH',
-      contentType: 'application/json',
-      data: JSON.stringify(event),
-      dataType: 'json',
-      success: function (event) {
-        this.setState({ event: event });
-        this.showSuccess();
-      }.bind(this)
-    });
-  },
-  deleteEvent: function deleteEvent(e) {
-    e.preventDefault();
-    var url = '/api/events/' + this.props.params.id;
-    console.log('Delete event:', this.props.params.id);
-    _jquery2.default.ajax({
-      type: 'DELETE',
-      url: url,
-      contentType: 'application/json',
-      success: function (data) {
-        console.log('Deleted event:', data);
-        //here install working forward to all events
-      }.bind(this),
-      error: function error(xhr, status, err) {
-        console.log('Error adding event:', err);
-      }
-    });
-  },
-  printDateInput: function printDateInput(date) {
-    var format_date = '';
-    var format_time = '';
-    var time;
-    if (date == 'start') {
-      if (this.state.start_date) {
-        format_date = (0, _moment2.default)(this.state.start_date).format('YYYY-MM-DD');
-      }
-      format_time = this.state.start_time;
-    } else {
-      if (this.state.end_date) {
-        format_date = (0, _moment2.default)(this.state.end_date).format('YYYY-MM-DD');
-      }
-      format_time = this.state.end_time;
-    }
-    var print_date = _react2.default.createElement(
-      'div',
-      { className: 'form-group start-date' },
-      _react2.default.createElement(
-        'label',
-        null,
-        date,
-        ' Date:'
-      ),
-      _react2.default.createElement('input', { type: 'date',
-        name: date + '_date',
-        value: format_date,
-        onChange: this.onInputChange }),
-      _react2.default.createElement('input', { type: 'time',
-        name: date + '_time',
-        value: format_time,
-        onChange: this.onInputChange })
-    );
-    return print_date;
-  },
-  printFormattedUrls: function printFormattedUrls(event) {
-    if (event.urls && event.urls.length > 0) {
-      var urls = event.urls.map(function (url, i) {
-        return _react2.default.createElement(
-          'span',
-          { key: i, id: i, onClick: this.deleteUrl },
-          url,
-          ' ',
-          _react2.default.createElement(
-            'span',
-            { id: i, className: 'delete' },
-            'x'
-          )
-        );
-      }.bind(this));
-      return urls;
-    }
-  },
-  printFormattedImages: function printFormattedImages(event) {
-    if (event.images && event.images.length > 0) {
-      var images = event.images.map(function (image, i) {
-        return _react2.default.createElement(
-          'span',
-          { key: i, id: i, onClick: this.deleteImage },
-          image.url,
-          ' ',
-          _react2.default.createElement(
-            'span',
-            { id: i, className: 'delete' },
-            'x'
-          )
-        );
-      }.bind(this));
-      return images;
-    }
-  },
-  render: function render() {
-    var success = _react2.default.createElement(
-      'div',
-      { className: 'modal alert--success', onClick: this.dismissSuccess },
-      _react2.default.createElement(
-        'h1',
-        null,
-        'Changes saved.'
-      )
-    );
-    if (this.state.event.all_day) {
-      var all_day = 'checked';
-    } else {
-      var all_day = false;
-    }
-    return _react2.default.createElement(
-      'div',
-      { className: 'event--edit' },
-      _react2.default.createElement(
-        'h2',
-        null,
-        'Edit event: ',
-        this.state.event.title
-      ),
-      _react2.default.createElement(
-        'form',
-        { onSubmit: this.submit, name: 'EventEdit', className: 'event--edit__form' },
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group published' },
-          _react2.default.createElement(
-            'label',
-            null,
-            'Status:'
-          ),
-          _react2.default.createElement(
-            'select',
-            { name: 'published', value: this.state.event.published, onChange: this.onInputChange },
-            _react2.default.createElement(
-              'option',
-              { value: false },
-              'Draft'
-            ),
-            _react2.default.createElement(
-              'option',
-              { value: true },
-              'Published'
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group title' },
-          _react2.default.createElement(
-            'label',
-            null,
-            'Title:'
-          ),
-          _react2.default.createElement('input', { type: 'text',
-            name: 'title',
-            required: true,
-            value: this.state.event.title,
-            onChange: this.onInputChange })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'field-group dates' },
-          this.printDateInput('start'),
-          this.printDateInput('end'),
-          _react2.default.createElement(
-            'div',
-            { className: 'form-group all-day' },
-            _react2.default.createElement('input', { type: 'checkbox',
-              name: 'all_day',
-              checked: all_day,
-              onChange: this.onInputChange }),
-            _react2.default.createElement(
-              'label',
-              null,
-              'All Day Event'
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group venue' },
-          _react2.default.createElement(
-            'label',
-            null,
-            'Venue:'
-          ),
-          _react2.default.createElement('input', { type: 'text',
-            name: 'venue',
-            value: this.state.event.venue,
-            onChange: this.onInputChange })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group organizer' },
-          _react2.default.createElement(
-            'label',
-            null,
-            'Organizer:'
-          ),
-          _react2.default.createElement('input', { type: 'text',
-            name: 'organizer',
-            value: this.state.event.organizer,
-            onChange: this.onInputChange })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'form-group description' },
-          _react2.default.createElement(
-            'label',
-            null,
-            'Description:'
-          ),
-          _react2.default.createElement('textarea', {
-            name: 'description',
-            placeholder: 'Description',
-            value: this.state.event.description,
-            onChange: this.onInputChange })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'field-group urls' },
-          _react2.default.createElement(
-            'div',
-            { className: 'form-group url' },
-            _react2.default.createElement(
-              'label',
-              null,
-              'External Links:'
-            ),
-            _react2.default.createElement('input', { type: 'text',
-              name: 'url',
-              placeholder: 'External Link',
-              value: this.state.url,
-              onChange: this.onInputChange }),
-            _react2.default.createElement(
-              'button',
-              { type: 'url', className: 'add', onClick: this.addUrl },
-              'New'
-            ),
-            this.printFormattedUrls(this.state.event)
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'field-group images' },
-          _react2.default.createElement(
-            'div',
-            { className: 'form-group' },
-            _react2.default.createElement(
-              'label',
-              null,
-              'Images:'
-            ),
-            _react2.default.createElement('input', { type: 'text',
-              name: 'image',
-              placeholder: 'Image',
-              value: this.state.image,
-              onChange: this.onInputChange }),
-            _react2.default.createElement(
-              'button',
-              { type: 'image', className: 'add', onClick: this.addImage },
-              'New'
-            ),
-            this.printFormattedImages(this.state.event)
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'actions' },
-          _react2.default.createElement(
-            'button',
-            { type: 'submit' },
-            'Submit'
-          ),
-          _react2.default.createElement(
-            'button',
-            { onClick: this.deleteEvent },
-            'Delete'
-          )
-        )
-      ),
-      this.state.successVisible ? success : null
-    );
-  }
-});
-
-module.exports = EventEdit;
-
-/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_edit.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
-
-/***/ }),
-/* 595 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-'use strict';
-
-var _react = __webpack_require__(2);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = __webpack_require__(21);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var EventContainer = _react2.default.createClass({
-  displayName: 'EventContainer',
-  render: function render() {
-    return _react2.default.createElement(
-      'div',
-      { className: 'event-container responsive-container' },
-      this.props.children
-    );
-  }
-});
-
-module.exports = EventContainer;
-
-/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
-
-/***/ }),
+/* 594 */,
+/* 595 */,
 /* 596 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -80037,17 +79497,13 @@ var _events_list = __webpack_require__(316);
 
 var _events_list2 = _interopRequireDefault(_events_list);
 
-var _event_add = __webpack_require__(315);
+var _event_add = __webpack_require__(763);
 
 var _event_add2 = _interopRequireDefault(_event_add);
 
-var _event_edit = __webpack_require__(594);
+var _event_edit = __webpack_require__(764);
 
 var _event_edit2 = _interopRequireDefault(_event_edit);
-
-var _event_container = __webpack_require__(595);
-
-var _event_container2 = _interopRequireDefault(_event_container);
 
 var _info = __webpack_require__(602);
 
@@ -80065,6 +79521,10 @@ var _events_index = __webpack_require__(601);
 
 var _events_index2 = _interopRequireDefault(_events_index);
 
+var _event_show = __webpack_require__(758);
+
+var _event_show2 = _interopRequireDefault(_event_show);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _react2.default.createElement(
@@ -80072,15 +79532,17 @@ exports.default = _react2.default.createElement(
   { path: '/', component: _main2.default },
   _react2.default.createElement(_reactRouter.IndexRoute, { component: _events_index2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: 'info', component: _info2.default }),
-  _react2.default.createElement(
-    _reactRouter.Route,
-    { path: 'events', component: _event_container2.default },
-    _react2.default.createElement(_reactRouter.IndexRoute, { component: _events_list2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: '/events/new', component: _event_add2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: '/events/:id', component: _event_edit2.default })
-  ),
+  _react2.default.createElement(_reactRouter.Route, { path: '/events/:id', component: _event_show2.default }),
+  _react2.default.createElement(_reactRouter.Route, { path: '/events/new', component: _event_add2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '*', component: _error_2.default })
 );
+
+// <Route path="events" component={EventContainer}>
+//   <IndexRoute component={EventsList} />
+//   <Route path="/events/new" component={EventsNew}/>
+// </Route>
+
+// import EventContainer from './components/events/event/event_container.js';
 
 /* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "routes.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
@@ -90749,123 +90211,7 @@ module.exports = __webpack_require__(375);
 /* 751 */,
 /* 752 */,
 /* 753 */,
-/* 754 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(2);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = __webpack_require__(127);
-
-var _events_table = __webpack_require__(597);
-
-var _events_table2 = _interopRequireDefault(_events_table);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var EventsList2 = function (_Component) {
-  _inherits(EventsList2, _Component);
-
-  function EventsList2() {
-    _classCallCheck(this, EventsList2);
-
-    return _possibleConstructorReturn(this, (EventsList2.__proto__ || Object.getPrototypeOf(EventsList2)).apply(this, arguments));
-  }
-
-  _createClass(EventsList2, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      this.props.fetchEvents();
-    }
-  }, {
-    key: 'renderEvents',
-    value: function renderEvents(events) {
-      debugger;
-      return events.map(function (event) {
-        debugger;
-        return _react2.default.createElement(
-          'li',
-          { className: 'list-group-item', key: event._id },
-          _react2.default.createElement(
-            _reactRouter.Link,
-            { to: "events/" + event._id },
-            _react2.default.createElement(
-              'h3',
-              { className: 'list-group-item-heading' },
-              event.title
-            )
-          )
-        );
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props$eventsList = this.props.eventsList,
-          events = _props$eventsList.events,
-          loading = _props$eventsList.loading,
-          error = _props$eventsList.error;
-
-
-      if (loading) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'container' },
-          _react2.default.createElement(
-            'h1',
-            null,
-            'Events'
-          ),
-          _react2.default.createElement(
-            'h3',
-            null,
-            'Loading...'
-          )
-        );
-      } else if (error) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'alert alert-danger' },
-          'Error: ',
-          error.message
-        );
-      }
-
-      return _react2.default.createElement(
-        'div',
-        { className: 'container' },
-        _react2.default.createElement(_events_table2.default, {
-          events: events })
-      );
-    }
-  }]);
-
-  return EventsList2;
-}(_react.Component);
-
-exports.default = EventsList2;
-
-/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "events_list.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
-
-/***/ }),
+/* 754 */,
 /* 755 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -91104,7 +90450,7 @@ var _reactRedux = __webpack_require__(320);
 
 var _events = __webpack_require__(755);
 
-var _events_list = __webpack_require__(754);
+var _events_list = __webpack_require__(757);
 
 var _events_list2 = _interopRequireDefault(_events_list);
 
@@ -91129,6 +90475,1050 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_events_list2.default);
 
 /* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "events_container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
+
+/***/ }),
+/* 757 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(127);
+
+var _events_table = __webpack_require__(597);
+
+var _events_table2 = _interopRequireDefault(_events_table);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EventsList2 = function (_Component) {
+  _inherits(EventsList2, _Component);
+
+  function EventsList2() {
+    _classCallCheck(this, EventsList2);
+
+    return _possibleConstructorReturn(this, (EventsList2.__proto__ || Object.getPrototypeOf(EventsList2)).apply(this, arguments));
+  }
+
+  _createClass(EventsList2, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.props.fetchEvents();
+    }
+  }, {
+    key: 'renderEvents',
+    value: function renderEvents(events) {
+      debugger;
+      return events.map(function (event) {
+        debugger;
+        return _react2.default.createElement(
+          'li',
+          { className: 'list-group-item', key: event._id },
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { to: "events/" + event._id },
+            _react2.default.createElement(
+              'h3',
+              { className: 'list-group-item-heading' },
+              event.title
+            )
+          )
+        );
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props$eventsList = this.props.eventsList,
+          events = _props$eventsList.events,
+          loading = _props$eventsList.loading,
+          error = _props$eventsList.error;
+
+
+      if (loading) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'container' },
+          _react2.default.createElement(
+            'h1',
+            null,
+            'Events'
+          ),
+          _react2.default.createElement(
+            'h3',
+            null,
+            'Loading...'
+          )
+        );
+      } else if (error) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'alert alert-danger' },
+          'Error: ',
+          error.message
+        );
+      }
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(_events_table2.default, {
+          events: events })
+      );
+    }
+  }]);
+
+  return EventsList2;
+}(_react.Component);
+
+exports.default = EventsList2;
+
+/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "events_list.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
+
+/***/ }),
+/* 758 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(320);
+
+var _events = __webpack_require__(755);
+
+var _event_container = __webpack_require__(759);
+
+var _event_container2 = _interopRequireDefault(_event_container);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EventShow = function (_Component) {
+  _inherits(EventShow, _Component);
+
+  function EventShow() {
+    _classCallCheck(this, EventShow);
+
+    return _possibleConstructorReturn(this, (EventShow.__proto__ || Object.getPrototypeOf(EventShow)).apply(this, arguments));
+  }
+
+  _createClass(EventShow, [{
+    key: 'render',
+
+
+    // onDeleteClick() {
+    //   this.props.deleteEvent(this.props.params.id)
+    //     .then(() => { this.context.router.push('/'); });
+    // }
+
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(_event_container2.default, { id: this.props.params.id })
+      );
+    }
+  }]);
+
+  return EventShow;
+}(_react.Component);
+
+EventShow.contextTypes = {
+  router: _react.PropTypes.object
+};
+exports.default = EventShow;
+
+/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_show.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
+
+/***/ }),
+/* 759 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _event_details = __webpack_require__(760);
+
+var _event_details2 = _interopRequireDefault(_event_details);
+
+var _events = __webpack_require__(755);
+
+var _reactRedux = __webpack_require__(320);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function mapStateToProps(globalState, ownProps) {
+  return {
+    activeEvent: globalState.events.activeEvent,
+    eventId: ownProps.id
+  };
+}
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    fetchEvent: function fetchEvent(id) {
+      dispatch((0, _events.fetchEvent)(id)).then(function (result) {
+        // Note: Error's "data" is in result.payload.response.data (inside "response")
+        // success's "data" is in result.payload.data
+        if (result.payload.response && result.payload.response.status !== 200) {
+          dispatch((0, _events.fetchEventFailure)(result.payload.response.data));
+        } else {
+          dispatch((0, _events.fetchEventSuccess)(result.payload.data));
+        }
+      });
+    },
+    resetMe: function resetMe() {
+      //clean up both activeEvent(currrently open) and deletedEvent(open and being deleted) states
+      dispatch((0, _events.resetActiveEvent)());
+      dispatch((0, _events.resetDeletedEvent)());
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_event_details2.default);
+
+/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_container.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
+
+/***/ }),
+/* 760 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(127);
+
+var _event_edit = __webpack_require__(764);
+
+var _event_edit2 = _interopRequireDefault(_event_edit);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EventDetails = function (_Component) {
+  _inherits(EventDetails, _Component);
+
+  function EventDetails(props) {
+    _classCallCheck(this, EventDetails);
+
+    var _this = _possibleConstructorReturn(this, (EventDetails.__proto__ || Object.getPrototypeOf(EventDetails)).call(this, props));
+
+    _this.state = {
+      isEditing: true
+    };
+    _this.toggleEdit = _this._toggleEdit.bind(_this);
+    return _this;
+  }
+
+  _createClass(EventDetails, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      //Important! If your component is navigating based on some global state(from say componentWillReceiveProps)
+      //always reset that global state back to null when you REMOUNT
+      this.props.resetMe();
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.fetchEvent(this.props.eventId);
+    }
+  }, {
+    key: '_toggleEdit',
+    value: function _toggleEdit() {
+      debugger;
+      this.setState({ isEditing: !this.state.isEditing });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props$activeEvent = this.props.activeEvent,
+          event = _props$activeEvent.event,
+          loading = _props$activeEvent.loading,
+          error = _props$activeEvent.error;
+
+      if (loading) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'container' },
+          'Loading...'
+        );
+      } else if (error) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'alert alert-danger' },
+          error.message
+        );
+      } else if (!event) {
+        return _react2.default.createElement('span', null);
+      }
+
+      if (this.state && this.state.isEditing) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'container' },
+          _react2.default.createElement(_event_edit2.default, { event: event }),
+          _react2.default.createElement(
+            'button',
+            { onClick: this.toggleEdit },
+            'Preview'
+          )
+        );
+      } else {
+        return _react2.default.createElement(
+          'div',
+          { className: 'container' },
+          _react2.default.createElement(
+            'h3',
+            null,
+            event.title
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            event.description
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: this.toggleEdit },
+            'Edit'
+          )
+        );
+      }
+    }
+  }]);
+
+  return EventDetails;
+}(_react.Component);
+
+EventDetails.contextTypes = {
+  router: _react.PropTypes.object
+};
+exports.default = EventDetails;
+
+/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_details.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
+
+/***/ }),
+/* 761 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 762 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 763 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+'use strict';
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(21);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _moment = __webpack_require__(1);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _underscore = __webpack_require__(369);
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+var _underscore3 = __webpack_require__(363);
+
+var _underscore4 = _interopRequireDefault(_underscore3);
+
+var _jquery = __webpack_require__(105);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+__webpack_require__(761);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var EventAdd = _react2.default.createClass({
+  displayName: 'EventAdd',
+  getSlug: function getSlug(event) {
+    var slug = _underscore4.default.slugify(event.title);
+    var match = _underscore2.default.where(this.props.events, { slug: slug });
+    if (match.length) {
+      return this.incrementUniqueSlug(slug);
+    } else {
+      return _underscore4.default.slugify(event.title);
+    }
+  },
+  incrementUniqueSlug: function incrementUniqueSlug(slug) {
+    var unique = [];
+    var index = 0;
+    while (unique.length == 0) {
+      if (_underscore2.default.where(this.props.events, { slug: slug + '-' + index }).length) {
+        index = index + 1;
+      } else {
+        unique.push(slug + '-' + index);
+      }
+    }
+    return unique[0];
+  },
+  formatDateInput: function formatDateInput(form) {
+    var all_day = false;
+    if (form.all_day.value == 'on') {
+      all_day = true;
+    }
+    var start_date = (0, _moment2.default)(form.start_date.value + ' ' + form.start_time.value);
+    var date = { start_date: start_date, all_day: all_day };
+    if (form.end_date.value) {
+      date.end_date = (0, _moment2.default)(form.end_date.value + ' ' + form.end_time.value);
+    }
+    return date;
+  },
+  handleSubmit: function handleSubmit(e) {
+    e.preventDefault();
+    var form = document.forms.EventAdd;
+    var date = this.formatDateInput(form);
+    var event = {
+      title: form.title.value,
+      start_date: (0, _moment2.default)(date.start_date).toISOString(),
+      all_day: date.all_day,
+      venue: form.venue.value,
+      organizer: form.organizer.value,
+      description: form.description.value,
+      urls: [form.url.value],
+      images: [{ url: form.image.value }],
+      created_at: (0, _moment2.default)(new Date()).toISOString(),
+      published: false
+    };
+    if (date.end_date) {
+      event.end_date = (0, _moment2.default)(date.end_date).toISOString();
+    }
+    var slug = this.getSlug(event);
+    event.slug = slug;
+    event.slugs = [slug];
+    if (this.props.addEvent) {
+      this.props.addEvent(event);
+    } else {
+      this.addEvent(event);
+    }
+    form.title.value = '';form.venue.value = '';form.organizer.value = '';
+    form.start_date.value = '';form.start_time.value = '';
+    form.end_date.value = '';form.end_time.value = '';form.all_day.value = !form.all_day.value;
+    form.description.value = '';form.url.value = '';form.image.value = '';
+  },
+  hideTime: function hideTime(e) {
+    (0, _jquery2.default)('input[type=time]').toggle('display');
+  },
+  render: function render() {
+    return _react2.default.createElement(
+      'div',
+      { className: 'event--add' },
+      _react2.default.createElement(
+        'h3',
+        null,
+        'New Event'
+      ),
+      _react2.default.createElement(
+        'form',
+        { name: 'EventAdd', className: 'event--add__form' },
+        _react2.default.createElement('input', { type: 'text', name: 'title', placeholder: 'Title' }),
+        _react2.default.createElement(
+          'div',
+          { className: 'event--add__time' },
+          _react2.default.createElement('input', { type: 'date', name: 'start_date', required: 'required' }),
+          _react2.default.createElement('input', { type: 'time', name: 'start_time' }),
+          _react2.default.createElement('input', { type: 'date', name: 'end_date' }),
+          _react2.default.createElement('input', { type: 'time', name: 'end_time' }),
+          _react2.default.createElement(
+            'span',
+            { className: 'all-day' },
+            _react2.default.createElement('input', { type: 'checkbox', name: 'all_day', onClick: this.hideTime })
+          )
+        ),
+        _react2.default.createElement('input', { type: 'text', name: 'venue', placeholder: 'Venue' }),
+        _react2.default.createElement('input', { type: 'text', name: 'organizer', placeholder: 'Organizer' }),
+        _react2.default.createElement('textarea', { name: 'description', placeholder: 'Description' }),
+        _react2.default.createElement('input', { type: 'text', name: 'url', placeholder: 'External link' }),
+        _react2.default.createElement('input', { type: 'text', name: 'image', placeholder: 'Image' }),
+        _react2.default.createElement(
+          'button',
+          { onClick: this.handleSubmit },
+          'Add Event'
+        )
+      )
+    );
+  }
+});
+
+module.exports = EventAdd;
+
+/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_add.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
+
+/***/ }),
+/* 764 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(14), RootInstanceProvider = __webpack_require__(15), ReactMount = __webpack_require__(13), React = __webpack_require__(2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+'use strict';
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(21);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _jquery = __webpack_require__(105);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _moment = __webpack_require__(1);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _underscore = __webpack_require__(363);
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+__webpack_require__(762);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var EventEdit = _react2.default.createClass({
+  displayName: 'EventEdit',
+  getInitialState: function getInitialState() {
+    var _event;
+
+    return {
+      successVisible: false,
+      event: (_event = {
+        start_date: '',
+        end_date: '',
+        all_day: false,
+        title: '',
+        description: '',
+        venue: '',
+        organizer: '',
+        images: [],
+        slugs: [],
+        urls: []
+      }, _defineProperty(_event, 'images', []), _defineProperty(_event, 'published', false), _event),
+      url: '',
+      image: '',
+      start_date: '',
+      start_time: '',
+      end_date: '',
+      end_time: ''
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    this.loadEvent();
+  },
+  componentDidUpdate: function componentDidUpdate(prevProps) {
+    // if (this.props.params.id != prevProps.params.id) {
+    //   this.loadEvent()
+    // }
+  },
+  loadEvent: function loadEvent() {
+    var date = this.loadFormattedDates(this.props.event);
+    this.setState({
+      event: this.props.event,
+      start_date: date.start_date,
+      start_time: date.start_time,
+      end_date: date.end_date,
+      end_time: date.end_time
+    });
+  },
+  loadFormattedDates: function loadFormattedDates(event) {
+    var start_date = '';
+    var start_time = '';
+    var end_date = '';
+    var end_time = '';
+    if (event.start_date) {
+      start_date = (0, _moment2.default)(event.start_date).format('YYYY-MM-DD');
+      start_time = (0, _moment2.default)(event.start_date).format('HH:mm');
+    }
+    if (event.end_date) {
+      end_date = (0, _moment2.default)(event.end_date).format('YYYY-MM-DD');
+      end_time = (0, _moment2.default)(event.end_date).format('HH:mm');
+    }
+    if (event.all_day) {
+      (0, _jquery2.default)('input[type=time]').toggle('display');
+    }
+    return { start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time };
+  },
+  onInputChange: function onInputChange(e) {
+    var changed = e.target.name;
+    var state = this.state;
+    if (changed == 'all_day') {
+      state.event.all_day = e.target.checked;
+      (0, _jquery2.default)('input[type=time]').toggle('display');
+    } else if (changed == 'published') {
+      if (e.target.value == 'true') {
+        state.event[changed] = true;
+      } else {
+        state.event[changed] = false;
+      }
+    } else if (changed != 'start_date' && changed != 'start_time' && changed != 'end_time' && changed != 'url' && changed != 'image') {
+      state.event[changed] = e.target.value;
+    } else {
+      state[changed] = e.target.value;
+    }
+    this.setState({ state: state });
+  },
+  addUrl: function addUrl() {
+    var event = this.state.event;
+    event.urls.push(document.forms.EventEdit.url.value);
+    document.forms.EventEdit.url.value = '';
+    var url = '';
+    this.setState({ event: event, url: url });
+  },
+  deleteUrl: function deleteUrl(e) {
+    var event = this.state.event;
+    event.urls.splice(e.target.id);
+    this.setState({ event: event });
+    this.submit(e);
+  },
+  addImage: function addImage() {
+    var event = this.state.event;
+    event.images.push({ url: document.forms.EventEdit.image.value });
+    var image = '';
+    document.forms.EventEdit.image.value = '';
+    this.setState({ event: event, image: image });
+  },
+  deleteImage: function deleteImage(e) {
+    var event = this.state.event;
+    event.images.splice(e.target.id);
+    this.setState({ event: event });
+    this.submit(e);
+  },
+  getSlug: function getSlug(event) {
+    var slug = _underscore2.default.slugify(event.title);
+    var match = _.where(this.props.events, { slug: slug });
+    if (match.length != 0) {
+      return this.incrementUniqueSlug(slug);
+    } else {
+      return _underscore2.default.slugify(event.title);
+    }
+  },
+  incrementUniqueSlug: function incrementUniqueSlug(slug) {
+    var unique = [];
+    var index = 0;
+    while (unique.length == 0) {
+      if (_.where(this.props.events, { slug: slug + '-' + index }).length) {
+        index = index + 1;
+      } else {
+        unique.push(slug + '-' + index);
+      }
+    }
+    return unique[0];
+  },
+  showSuccess: function showSuccess() {
+    this.setState({ successVisible: true });
+  },
+  dismissSuccess: function dismissSuccess() {
+    this.setState({ successVisible: false });
+  },
+  formatDateInput: function formatDateInput() {
+    var form = document.forms.EventEdit;
+    var all_day = false;
+    if (form.all_day.checked) {
+      all_day = true;
+    }
+    var start_date = (0, _moment2.default)(form.start_date.value + ' ' + form.start_time.value);
+    var date = { start_date: start_date, all_day: all_day };
+    if (form.end_date.value) {
+      if (form.end_time.value) {
+        date.end_date = (0, _moment2.default)(form.end_date.value + ' ' + form.end_time.value);
+      } else {
+        date.end_date = (0, _moment2.default)(form.end_date.value);
+      }
+    }
+    return date;
+  },
+  submit: function submit(e) {
+    e.preventDefault();
+    var date = this.formatDateInput();
+    var event = {
+      title: this.state.event.title,
+      start_date: (0, _moment2.default)(date.start_date).toISOString(),
+      all_day: date.all_day,
+      venue: this.state.event.venue,
+      organizer: this.state.event.organizer,
+      description: this.state.event.description,
+      updated_at: (0, _moment2.default)(new Date()).toISOString(),
+      published: this.state.event.published,
+      urls: this.state.event.urls,
+      images: this.state.event.images
+    };
+    // update slug if title has changed
+    if (date.end_date) {
+      event.end_date = (0, _moment2.default)(date.end_date).toISOString();
+    }
+    _jquery2.default.ajax({
+      url: '/api/events/' + this.props.params.id,
+      type: 'PATCH',
+      contentType: 'application/json',
+      data: JSON.stringify(event),
+      dataType: 'json',
+      success: function (event) {
+        this.setState({ event: event });
+        this.showSuccess();
+      }.bind(this)
+    });
+  },
+  deleteEvent: function deleteEvent(e) {
+    e.preventDefault();
+    var url = '/api/events/' + this.props.params.id;
+    console.log('Delete event:', this.props.params.id);
+    _jquery2.default.ajax({
+      type: 'DELETE',
+      url: url,
+      contentType: 'application/json',
+      success: function (data) {
+        console.log('Deleted event:', data);
+        //here install working forward to all events
+      }.bind(this),
+      error: function error(xhr, status, err) {
+        console.log('Error adding event:', err);
+      }
+    });
+  },
+  printDateInput: function printDateInput(date) {
+    var format_date = '';
+    var format_time = '';
+    var time;
+    if (date == 'start') {
+      if (this.state.start_date) {
+        format_date = (0, _moment2.default)(this.state.start_date).format('YYYY-MM-DD');
+      }
+      format_time = this.state.start_time;
+    } else {
+      if (this.state.end_date) {
+        format_date = (0, _moment2.default)(this.state.end_date).format('YYYY-MM-DD');
+      }
+      format_time = this.state.end_time;
+    }
+    var print_date = _react2.default.createElement(
+      'div',
+      { className: 'form-group start-date' },
+      _react2.default.createElement(
+        'label',
+        null,
+        date,
+        ' Date:'
+      ),
+      _react2.default.createElement('input', { type: 'date',
+        name: date + '_date',
+        value: format_date,
+        onChange: this.onInputChange }),
+      _react2.default.createElement('input', { type: 'time',
+        name: date + '_time',
+        value: format_time,
+        onChange: this.onInputChange })
+    );
+    return print_date;
+  },
+  printFormattedUrls: function printFormattedUrls(event) {
+    if (event.urls && event.urls.length > 0) {
+      var urls = event.urls.map(function (url, i) {
+        return _react2.default.createElement(
+          'span',
+          { key: i, id: i, onClick: this.deleteUrl },
+          url,
+          ' ',
+          _react2.default.createElement(
+            'span',
+            { id: i, className: 'delete' },
+            'x'
+          )
+        );
+      }.bind(this));
+      return urls;
+    }
+  },
+  printFormattedImages: function printFormattedImages(event) {
+    if (event.images && event.images.length > 0) {
+      var images = event.images.map(function (image, i) {
+        return _react2.default.createElement(
+          'span',
+          { key: i, id: i, onClick: this.deleteImage },
+          image.url,
+          ' ',
+          _react2.default.createElement(
+            'span',
+            { id: i, className: 'delete' },
+            'x'
+          )
+        );
+      }.bind(this));
+      return images;
+    }
+  },
+  render: function render() {
+    var success = _react2.default.createElement(
+      'div',
+      { className: 'modal alert--success', onClick: this.dismissSuccess },
+      _react2.default.createElement(
+        'h1',
+        null,
+        'Changes saved.'
+      )
+    );
+    if (this.state.event.all_day) {
+      var all_day = 'checked';
+    } else {
+      var all_day = false;
+    }
+    return _react2.default.createElement(
+      'div',
+      { className: 'event--edit' },
+      _react2.default.createElement(
+        'h2',
+        null,
+        'Edit event: ',
+        this.state.event.title
+      ),
+      _react2.default.createElement(
+        'form',
+        { onSubmit: this.submit, name: 'EventEdit', className: 'event--edit__form' },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group published' },
+          _react2.default.createElement(
+            'label',
+            null,
+            'Status:'
+          ),
+          _react2.default.createElement(
+            'select',
+            { name: 'published', value: this.state.event.published, onChange: this.onInputChange },
+            _react2.default.createElement(
+              'option',
+              { value: false },
+              'Draft'
+            ),
+            _react2.default.createElement(
+              'option',
+              { value: true },
+              'Published'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group title' },
+          _react2.default.createElement(
+            'label',
+            null,
+            'Title:'
+          ),
+          _react2.default.createElement('input', { type: 'text',
+            name: 'title',
+            required: true,
+            value: this.state.event.title,
+            onChange: this.onInputChange })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'field-group dates' },
+          this.printDateInput('start'),
+          this.printDateInput('end'),
+          _react2.default.createElement(
+            'div',
+            { className: 'form-group all-day' },
+            _react2.default.createElement('input', { type: 'checkbox',
+              name: 'all_day',
+              checked: all_day,
+              onChange: this.onInputChange }),
+            _react2.default.createElement(
+              'label',
+              null,
+              'All Day Event'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group venue' },
+          _react2.default.createElement(
+            'label',
+            null,
+            'Venue:'
+          ),
+          _react2.default.createElement('input', { type: 'text',
+            name: 'venue',
+            value: this.state.event.venue,
+            onChange: this.onInputChange })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group organizer' },
+          _react2.default.createElement(
+            'label',
+            null,
+            'Organizer:'
+          ),
+          _react2.default.createElement('input', { type: 'text',
+            name: 'organizer',
+            value: this.state.event.organizer,
+            onChange: this.onInputChange })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group description' },
+          _react2.default.createElement(
+            'label',
+            null,
+            'Description:'
+          ),
+          _react2.default.createElement('textarea', {
+            name: 'description',
+            placeholder: 'Description',
+            value: this.state.event.description,
+            onChange: this.onInputChange })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'field-group urls' },
+          _react2.default.createElement(
+            'div',
+            { className: 'form-group url' },
+            _react2.default.createElement(
+              'label',
+              null,
+              'External Links:'
+            ),
+            _react2.default.createElement('input', { type: 'text',
+              name: 'url',
+              placeholder: 'External Link',
+              value: this.state.url,
+              onChange: this.onInputChange }),
+            _react2.default.createElement(
+              'button',
+              { type: 'url', className: 'add', onClick: this.addUrl },
+              'New'
+            ),
+            this.printFormattedUrls(this.state.event)
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'field-group images' },
+          _react2.default.createElement(
+            'div',
+            { className: 'form-group' },
+            _react2.default.createElement(
+              'label',
+              null,
+              'Images:'
+            ),
+            _react2.default.createElement('input', { type: 'text',
+              name: 'image',
+              placeholder: 'Image',
+              value: this.state.image,
+              onChange: this.onInputChange }),
+            _react2.default.createElement(
+              'button',
+              { type: 'image', className: 'add', onClick: this.addImage },
+              'New'
+            ),
+            this.printFormattedImages(this.state.event)
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'actions' },
+          _react2.default.createElement(
+            'button',
+            { type: 'submit' },
+            'Submit'
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: this.deleteEvent },
+            'Delete'
+          )
+        )
+      ),
+      this.state.successVisible ? success : null
+    );
+  }
+});
+
+module.exports = EventEdit;
+
+/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(16); if (makeExportsHot(module, __webpack_require__(2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "event_edit.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)(module)))
 
 /***/ })

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { fetchEvents, fetchEventsSuccess, fetchEventsFailure } from '../actions/events';
-import EventsList from '../components/events_list';
+import EventsList from '../components/events/events_list';
 
 
 const mapStateToProps = (state) => {

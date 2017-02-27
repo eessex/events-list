@@ -13,6 +13,10 @@
     padding: .25em 1em; }
   .events--table .th, .events--table .td {
     width: 15%; }
+.event--add__form {
+  display: flex;
+  flex-direction: column;
+  max-width: 750px; }
 .event--edit {
   position: relative; }
 

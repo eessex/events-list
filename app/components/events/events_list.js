@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import EventsTable from './events/events/events_table/events_table'
+import EventsTable from './events_table/events_table'
 
 class EventsList2 extends Component {
   componentWillMount() {
@@ -25,7 +25,7 @@ class EventsList2 extends Component {
     const { events, loading, error } = this.props.eventsList;
 
     if(loading) {
-      return <div className="container"><h1>Events</h1><h3>Loading...</h3></div>      
+      return <div className="container"><h1>Events</h1><h3>Loading...</h3></div>
     } else if(error) {
       return <div className="alert alert-danger">Error: {error.message}</div>
     }

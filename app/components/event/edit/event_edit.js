@@ -36,21 +36,19 @@ const EventEdit = React.createClass({
     this.loadEvent()
   },
   componentDidUpdate(prevProps) {
-    if (this.props.params.id != prevProps.params.id) {
-      this.loadEvent()
-    }
+    // if (this.props.params.id != prevProps.params.id) {
+    //   this.loadEvent()
+    // }
   },
   loadEvent() {
-    $.ajax('/api/events/' + this.props.params.id).done(function(event) {
-      var date = this.loadFormattedDates(event)
-      this.setState({
-        event: event,
-        start_date: date.start_date,
-        start_time: date.start_time,
-        end_date: date.end_date,
-        end_time: date.end_time
-      })
-    }.bind(this))
+    var date = this.loadFormattedDates(this.props.event)
+    this.setState({
+      event: this.props.event,
+      start_date: date.start_date,
+      start_time: date.start_time,
+      end_date: date.end_date,
+      end_time: date.end_time
+    })
   },
   loadFormattedDates(event) {
     var start_date = ''
