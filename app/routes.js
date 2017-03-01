@@ -25,9 +25,3 @@ export default (
       <Route path="*" component={NotFound}/>
     </Route>
 );
-
-
-      // <Route path="events" component={EventContainer}>
-      //   <IndexRoute component={EventsList} />
-      //   <Route path="/events/new" component={EventsNew}/>
-      // </Route>
