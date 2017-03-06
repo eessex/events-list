@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
-import EventEdit from './edit/event_edit'
+import EventEdit from './edit/event_editz'
 
 class EventDetails extends Component {
   static contextTypes = {
@@ -18,10 +18,11 @@ class EventDetails extends Component {
   componentWillUnmount() {
     //Important! If your component is navigating based on some global state(from say componentWillReceiveProps)
     //always reset that global state back to null when you REMOUNT
-     this.props.resetMe();
+     // this.props.resetMe();
   }
 
   componentDidMount() {
+    debugger
     this.props.fetchEvent(this.props.eventId);
   }
 
@@ -31,16 +32,16 @@ class EventDetails extends Component {
   }
 
   render() {
-    const { event, loading, error } = this.props.activeEvent;
-    if (loading) {
-      return <div className="container">Loading...</div>;
-    } else if(error) {
-      return  <div className="alert alert-danger">{error.message}</div>
-    } else if(!event) {
-      return <span />
-    }
+    // if (loading) {
+      // return <div className="container">Loading...</div>;
+    // } else if(error) {
+      // return  <div className="alert alert-danger">{error.message}</div>
+    // } else if(!event) {
+      // return <span />
+    // }
 
     if (this.state && this.state.isEditing) {
+    const { event, loading, error } = this.props.activeEvent;
     return (
       <div className="container">
         <EventEdit event={event} />

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 
 function mapStateToProps(globalState, ownProps) {
+  debugger
   return {
     activeEvent: globalState.events.activeEvent,
     eventId: ownProps.id
@@ -12,9 +13,10 @@ function mapStateToProps(globalState, ownProps) {
 }
 
 const mapDispatchToProps = (dispatch) => {
+  debugger
   return {
-    fetchEvent: (id) => {
-      dispatch(fetchEvent(id))
+    fetchEvent: (_id) => {
+      dispatch(fetchEvent(_id))
         .then((result) => {
           // Note: Error's "data" is in result.payload.response.data (inside "response")
           // success's "data" is in result.payload.data

@@ -66,8 +66,6 @@ const EventAdd = React.createClass({
     event.slugs = [slug]
     if (this.props.addEvent) {
       this.props.addEvent(event);
-    } else {
-      this.addEvent(event);
     }
     form.title.value = ''; form.venue.value = ''; form.organizer.value = '';
     form.start_date.value = ''; form.start_time.value = '';

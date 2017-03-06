@@ -14,9 +14,10 @@ class EventShow extends Component {
   // }
 
   render() {
+    debugger
     return (
       <div className='container'>
-        <EventContainer id={this.props.params.id}/>
+        <EventContainer id={this.props.params._id}/>
       </div>
     );
   }

@@ -13,6 +13,16 @@ var router = express.Router();
 
 var Event = require('./models/events')
 
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Request-Headers", "*");
+  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 router.use(function(req, res, next) {
     console.log('Something is happening.');
     next();
@@ -36,11 +46,13 @@ router.route('/api/events')
     });
   });
 
-router.route('/api/events/:event_id')
+router.route('/api/events/:_id')
   .get(function(req, res) {
-    Event.findById(req.params.event_id, function(err, event) {
+    console.log(req.params)
+    Event.findById(req.params._id, function(err, event) {
       if (err)
-          res.send(err);
+        console.log(err)
+        res.send(err);
       res.json(event)
     })
   })
@@ -89,6 +101,10 @@ router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/', 'index.html'))
 });
 
+
+app.use('/events/:_id', router);
+app.use('/events/new', router);
+app.use('/info', router);
 app.use('/', router);
 
 app.listen(port);

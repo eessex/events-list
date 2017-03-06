@@ -135,8 +135,10 @@ export function resetDeletedEvent() {
 ;
 
 export function fetchEvent(id) {
+  // debugger
+  console.log('id is: ' + id)
   const request = axios.get(`${ROOT_URL}/events/${id}`);
-
+  console.log('request is: ' + request)
   return {
     type: FETCH_EVENT,
     payload: request

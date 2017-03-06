@@ -10,7 +10,7 @@ var mainPath = path.resolve(__dirname, 'app', 'index.js');
 function getEntrySources(sources) {
   if (process.env.NODE_ENV !== 'production') {
     sources.push('webpack-dev-server/client?http://localhost:8080');
-    sources.push('webpack/hot/only-dev-server');
+    // sources.push('webpack/hot/only-dev-server');
   }
   return sources;
 }
@@ -40,7 +40,7 @@ const config = {
       {
         test: /\.js?$/,
         exclude: [nodeModulesPath],
-        loaders: ['react-hot-loader', 'babel-loader']
+        loaders: ['babel-loader'] //'react-hot-loader'
       }
     ]
   },

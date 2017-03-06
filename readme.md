@@ -1,5 +1,5 @@
 #### Install node_modules
-npm install
+yarn install
 
 #### Environment
 Create a .env file including your database name:
@@ -9,7 +9,7 @@ MONGODB_URI=mongodb://localhost/MyDBName
 mongod
 
 #### Start server
-npm start
+yarn start
 
 #### Watch assets & hot reloading
 webpack-dev-server
