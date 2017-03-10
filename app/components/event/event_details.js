@@ -9,8 +9,9 @@ class EventDetails extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props)
     this.state = {
-      isEditing: true
+      isEditing: false
     };
     this.toggleEdit = this._toggleEdit.bind(this)
   }
@@ -22,41 +23,35 @@ class EventDetails extends Component {
   }
 
   componentDidMount() {
-    debugger
     this.props.fetchEvent(this.props.eventId);
   }
 
   _toggleEdit() {
-    debugger
     this.setState({isEditing: !this.state.isEditing})
   }
 
   render() {
-    // if (loading) {
-      // return <div className="container">Loading...</div>;
-    // } else if(error) {
-      // return  <div className="alert alert-danger">{error.message}</div>
-    // } else if(!event) {
-      // return <span />
-    // }
-
-    if (this.state && this.state.isEditing) {
     const { event, loading, error } = this.props.activeEvent;
+    if (loading) {
+      return <div className="container">Loading...</div>;
+    } else if (error) {
+      return  <div className="alert alert-danger">{error.message}</div>
+    } else if (this.state && this.state.isEditing) {
     return (
       <div className="container">
         <EventEdit event={event} />
         <button onClick={this.toggleEdit}>Preview</button>
       </div>
       )
-    } else {
-      return (
-        <div className="container">
-          <h3>{event.title}</h3>
-          <p>{event.description}</p>
-          <button onClick={this.toggleEdit}>Edit</button>
-        </div>
-      );
-    }
+     } // else {
+    //   return (
+    //     <div className="container">
+    //       <h3>{event}</h3>
+    //       <p>{event.description}</p>
+    //       <button onClick={this.toggleEdit}>Edit</button>
+    //     </div>
+    //   );
+    // }
   }
 }
 

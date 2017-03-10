@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 
 function mapStateToProps(globalState, ownProps) {
-  debugger
   return {
     activeEvent: globalState.events.activeEvent,
     eventId: ownProps.id
@@ -13,7 +12,6 @@ function mapStateToProps(globalState, ownProps) {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  debugger
   return {
     fetchEvent: (_id) => {
       dispatch(fetchEvent(_id))

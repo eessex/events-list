@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ab40b6912087c0f4faca"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9714bed6de114ab70cc2"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -48800,8 +48800,9 @@ var EventDetails = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (EventDetails.__proto__ || Object.getPrototypeOf(EventDetails)).call(this, props));
 
+    console.log(props);
     _this.state = {
-      isEditing: true
+      isEditing: false
     };
     _this.toggleEdit = _this._toggleEdit.bind(_this);
     return _this;
@@ -48817,63 +48818,53 @@ var EventDetails = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      debugger;
       this.props.fetchEvent(this.props.eventId);
     }
   }, {
     key: '_toggleEdit',
     value: function _toggleEdit() {
-      debugger;
       this.setState({ isEditing: !this.state.isEditing });
     }
   }, {
     key: 'render',
     value: function render() {
-      // if (loading) {
-      // return <div className="container">Loading...</div>;
-      // } else if(error) {
-      // return  <div className="alert alert-danger">{error.message}</div>
-      // } else if(!event) {
-      // return <span />
-      // }
+      var _props$activeEvent = this.props.activeEvent,
+          event = _props$activeEvent.event,
+          loading = _props$activeEvent.loading,
+          error = _props$activeEvent.error;
 
-      if (this.state && this.state.isEditing) {
-        var _props$activeEvent = this.props.activeEvent,
-            _event = _props$activeEvent.event,
-            loading = _props$activeEvent.loading,
-            error = _props$activeEvent.error;
-
+      if (loading) {
         return _react2.default.createElement(
           'div',
           { className: 'container' },
-          _react2.default.createElement(_event_editz2.default, { event: _event }),
+          'Loading...'
+        );
+      } else if (error) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'alert alert-danger' },
+          error.message
+        );
+      } else if (this.state && this.state.isEditing) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'container' },
+          _react2.default.createElement(_event_editz2.default, { event: event }),
           _react2.default.createElement(
             'button',
             { onClick: this.toggleEdit },
             'Preview'
           )
         );
-      } else {
-        return _react2.default.createElement(
-          'div',
-          { className: 'container' },
-          _react2.default.createElement(
-            'h3',
-            null,
-            event.title
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            event.description
-          ),
-          _react2.default.createElement(
-            'button',
-            { onClick: this.toggleEdit },
-            'Edit'
-          )
-        );
-      }
+      } // else {
+      //   return (
+      //     <div className="container">
+      //       <h3>{event}</h3>
+      //       <p>{event.description}</p>
+      //       <button onClick={this.toggleEdit}>Edit</button>
+      //     </div>
+      //   );
+      // }
     }
   }]);
 
@@ -49757,7 +49748,6 @@ var _reactRedux = __webpack_require__(35);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function mapStateToProps(globalState, ownProps) {
-  debugger;
   return {
     activeEvent: globalState.events.activeEvent,
     eventId: ownProps.id
@@ -49765,7 +49755,6 @@ function mapStateToProps(globalState, ownProps) {
 }
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  debugger;
   return {
     fetchEvent: function fetchEvent(_id) {
       dispatch((0, _events.fetchEvent)(_id)).then(function (result) {

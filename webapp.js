@@ -48,16 +48,16 @@ router.route('/api/events')
 
 router.route('/api/events/:_id')
   .get(function(req, res) {
-    console.log(req.params)
-    Event.findById(req.params._id, function(err, event) {
-      if (err)
-        console.log(err)
+    Event.findById(req.params._id, function(err, events) {
+      if (err) {
         res.send(err);
-      res.json(event)
-    })
+      } else {
+        res.json(events);
+      }
+    });
   })
   .put(function(req, res) {
-    Event.findById(req.params.event_id, function(err, event) {
+    Event.findById(req.params._id, function(err, event) {
       if (err)
         res.send(err);
       event = req.body;
@@ -70,7 +70,7 @@ router.route('/api/events/:_id')
   })
   .delete(function(req, res) {
     Event.remove({
-      _id: req.params.event_id
+      _id: req.params._id
     }, function(err, event) {
       if (err)
         res.send(err);
@@ -78,24 +78,6 @@ router.route('/api/events/:_id')
     });
   });
 
-// // router.get('/events/:id', function(req, res, next) {
-// //   Event.findById({
-// //     '_id': req.params.id
-// //   }, function(err, event) {
-// //     if (err) {
-// //       console.log(err);
-// //       return res.status(500).json({
-// //         message: 'Could not retrieve event w/ that id'
-// //       });
-// //     }
-// //     if (!event) {
-// //       return res.status(404).json({
-// //         message: 'Event not found'
-// //       })
-// //     }
-// //     res.json(event);
-// //   });
-// // });
 
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/', 'index.html'))
@@ -112,17 +94,7 @@ console.log('Listening on port ' + port);
 
 mongoose.connect(process.env.MONGODB_URI)
 
-
-
-
-// var MongoClient = require('mongodb').MongoClient;
-// var ObjectId = require('mongodb').ObjectID;
 var httpProxy = require('http-proxy');
-
-// //routes
-// // var events = require('./routes/events')(app);
-
-// var db;
 
 var proxy = httpProxy.createProxyServer();
 
