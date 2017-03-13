@@ -8,13 +8,12 @@ class EventShow extends Component {
     router: PropTypes.object
   };
 
-  // onDeleteClick() {
-  //   this.props.deleteEvent(this.props.params.id)
-  //     .then(() => { this.context.router.push('/'); });
-  // }
+  onDeleteClick() {
+    this.props.deleteEvent(this.props.params.id)
+      .then(() => { this.context.router.push('/'); });
+  }
 
   render() {
-    debugger
     return (
       <div className='container'>
         <EventContainer id={this.props.params._id}/>

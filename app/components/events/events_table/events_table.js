@@ -13,6 +13,9 @@ const EventsTable = React.createClass({
 	},
 
 	render() {
+    if (this.props.loading) {
+      return <h3>loading</h3>
+    }
 		return (
 			<div className='events--table'>
         <div className='events--table__header h5'>

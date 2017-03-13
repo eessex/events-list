@@ -9,7 +9,7 @@ import {
 
 	const INITIAL_STATE = { eventsList: {events: [], error:null, loading: false},
 							newEvent:{event:null, error: null, loading: false},
-							activeEvent:{event:null, error:null, loading: false},
+							activeEvent:{event:{}, error:null, loading: false},
 							deletedEvent: {event: null, error:null, loading: false},
 						};
 

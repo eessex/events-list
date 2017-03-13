@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import EventEdit from './edit/event_editz'
+import EventShow from './event_show'
 
 class EventDetails extends Component {
   static contextTypes = {
@@ -9,7 +10,7 @@ class EventDetails extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props)
+    // console.log(props)
     this.state = {
       isEditing: false
     };
@@ -25,6 +26,8 @@ class EventDetails extends Component {
   componentDidMount() {
     this.props.fetchEvent(this.props.eventId);
   }
+  componentDidReceiveProps() {
+  }
 
   _toggleEdit() {
     this.setState({isEditing: !this.state.isEditing})
@@ -36,22 +39,23 @@ class EventDetails extends Component {
       return <div className="container">Loading...</div>;
     } else if (error) {
       return  <div className="alert alert-danger">{error.message}</div>
-    } else if (this.state && this.state.isEditing) {
-    return (
-      <div className="container">
-        <EventEdit event={event} />
-        <button onClick={this.toggleEdit}>Preview</button>
-      </div>
-      )
-     } // else {
-    //   return (
-    //     <div className="container">
-    //       <h3>{event}</h3>
-    //       <p>{event.description}</p>
-    //       <button onClick={this.toggleEdit}>Edit</button>
-    //     </div>
-    //   );
-    // }
+    } else {
+      if (this.state && this.state.isEditing) {
+        return (
+          <div className="event responsive-container">
+            <EventEdit event={event} />
+            <button onClick={this.toggleEdit}>Preview</button>
+          </div>
+        )
+       } else {
+        return (
+          <div className="event responsive-container">
+            <EventShow event={event} loading={loading} />
+            <button onClick={this.toggleEdit}>Edit</button>
+          </div>
+        )
+      }
+    }
   }
 }
 

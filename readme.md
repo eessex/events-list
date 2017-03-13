@@ -8,10 +8,10 @@ MONGODB_URI=mongodb://localhost/MyDBName
 #### Establish Database connection
 mongod
 
+#### Watch assets
+webpack
+
 #### Start server
 yarn start
-
-#### Watch assets & hot reloading
-webpack-dev-server
 
 Find me at http://localhost:3000

@@ -94,7 +94,7 @@ class EventsForm extends Component {
   render() {
     const {handleSubmit, submitting, newEvent} = this.props;
     return (
-      <div className='container'>
+      <div className='event--edit'>
         { this.renderError(newEvent) }
         <form onSubmit={ handleSubmit(validateAndCreateEvent) }>
           <Field

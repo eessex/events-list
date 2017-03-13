@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import EventsTable from './events_table/events_table'
 
-class EventsList2 extends Component {
+class EventsList extends Component {
   componentWillMount() {
     this.props.fetchEvents();
   }
 
   renderEvents(events) {
-  	debugger
     return events.map((event) => {
-    	debugger
       return (
         <li className="list-group-item" key={event._id}>
           <Link to={"events/" + event._id}>
@@ -33,11 +31,11 @@ class EventsList2 extends Component {
     return (
       <div className="container">
 				<EventsTable
-					events={events} />
+					events={events} loading={loading} />
       </div>
     );
   }
 }
 
 
-export default EventsList2;
+export default EventsList;

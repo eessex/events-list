@@ -5,8 +5,8 @@ const Info = React.createClass({
   render() {
     return (
       <div>
-      <h2>Info</h2>
-      {this.props.children}
+	      <h2>Info</h2>
+	      {this.props.children}
       </div>
     );
   }
