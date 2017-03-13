@@ -18,9 +18,7 @@ class EventDetails extends Component {
   }
 
   componentWillUnmount() {
-    //Important! If your component is navigating based on some global state(from say componentWillReceiveProps)
-    //always reset that global state back to null when you REMOUNT
-     // this.props.resetMe();
+     this.props.resetMe();
   }
 
   componentDidMount() {
@@ -43,7 +41,7 @@ class EventDetails extends Component {
       if (this.state && this.state.isEditing) {
         return (
           <div className="event responsive-container">
-            <EventEdit event={event} />
+            <EventEdit event={event} loading={loading} />
             <button onClick={this.toggleEdit}>Preview</button>
           </div>
         )

@@ -92,40 +92,47 @@ class EventsForm extends Component {
     }
   }
   render() {
-    const {handleSubmit, submitting, newEvent} = this.props;
-    return (
-      <div className='event--edit'>
-        { this.renderError(newEvent) }
-        <form onSubmit={ handleSubmit(validateAndCreateEvent) }>
-          <Field
-                 name="title"
-                 type="text"
-                 component={ renderField }
-                 label="Title *" />
-          <Field
-                 name="start_date"
-                 type="text"
-                 component={ renderField }
-                 label="Event Date *" />
-          <Field
-                 name="description"
-                 component={ renderTextArea }
-                 label="Description *" />
-          <div>
-            <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={ submitting }>
-              Submit
-            </button>
-            <Link
-                  to="/"
-                  className="btn btn-error"> Cancel
-            </Link>
-          </div>
-        </form>
-      </div>
-    )
+    const { loading, event, handleSubmit, submitting, newEvent } = this.props;
+    if (loading) {
+      return <p>loading</p>
+    } else {
+      // return (
+    // const { handleSubmit, submitting, newEvent } = this.props;
+    // const { event } = this.props.activeEvent;
+      return (
+        <div className='event--edit'>
+          { this.renderError(newEvent) }
+          <form onSubmit={ handleSubmit(validateAndCreateEvent) }>
+            <Field
+                   name="title"
+                   type="text"
+                   component={ renderField }
+                   label="Title *" />
+            <Field
+                   name="start_date"
+                   type="text"
+                   component={ renderField }
+                   label="Event Date *" />
+            <Field
+                   name="description"
+                   component={ renderTextArea }
+                   label="Description *" />
+            <div>
+              <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={ submitting }>
+                Submit
+              </button>
+              <Link
+                    to="/"
+                    className="btn btn-error"> Cancel
+              </Link>
+            </div>
+          </form>
+        </div>
+      )
+    }
   }
 }
 

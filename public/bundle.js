@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "044a5718621639bb1394"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "70cf8327f6f58cc336d7"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -26645,52 +26645,65 @@ var EventsForm = function (_Component) {
     key: 'render',
     value: function render() {
       var _props = this.props,
+          loading = _props.loading,
+          event = _props.event,
           handleSubmit = _props.handleSubmit,
           submitting = _props.submitting,
           newEvent = _props.newEvent;
 
-      return _react2.default.createElement(
-        'div',
-        { className: 'event--edit' },
-        this.renderError(newEvent),
-        _react2.default.createElement(
-          'form',
-          { onSubmit: handleSubmit(validateAndCreateEvent) },
-          _react2.default.createElement(_reduxForm.Field, {
-            name: 'title',
-            type: 'text',
-            component: _render_field2.default,
-            label: 'Title *' }),
-          _react2.default.createElement(_reduxForm.Field, {
-            name: 'start_date',
-            type: 'text',
-            component: _render_field2.default,
-            label: 'Event Date *' }),
-          _react2.default.createElement(_reduxForm.Field, {
-            name: 'description',
-            component: _render_textarea2.default,
-            label: 'Description *' }),
+      if (loading) {
+        return _react2.default.createElement(
+          'p',
+          null,
+          'loading'
+        );
+      } else {
+        // return (
+        // const { handleSubmit, submitting, newEvent } = this.props;
+        // const { event } = this.props.activeEvent;
+        return _react2.default.createElement(
+          'div',
+          { className: 'event--edit' },
+          this.renderError(newEvent),
           _react2.default.createElement(
-            'div',
-            null,
+            'form',
+            { onSubmit: handleSubmit(validateAndCreateEvent) },
+            _react2.default.createElement(_reduxForm.Field, {
+              name: 'title',
+              type: 'text',
+              component: _render_field2.default,
+              label: 'Title *' }),
+            _react2.default.createElement(_reduxForm.Field, {
+              name: 'start_date',
+              type: 'text',
+              component: _render_field2.default,
+              label: 'Event Date *' }),
+            _react2.default.createElement(_reduxForm.Field, {
+              name: 'description',
+              component: _render_textarea2.default,
+              label: 'Description *' }),
             _react2.default.createElement(
-              'button',
-              {
-                type: 'submit',
-                className: 'btn btn-primary',
-                disabled: submitting },
-              'Submit'
-            ),
-            _react2.default.createElement(
-              _reactRouter.Link,
-              {
-                to: '/',
-                className: 'btn btn-error' },
-              ' Cancel'
+              'div',
+              null,
+              _react2.default.createElement(
+                'button',
+                {
+                  type: 'submit',
+                  className: 'btn btn-primary',
+                  disabled: submitting },
+                'Submit'
+              ),
+              _react2.default.createElement(
+                _reactRouter.Link,
+                {
+                  to: '/',
+                  className: 'btn btn-error' },
+                ' Cancel'
+              )
             )
           )
-        )
-      );
+        );
+      }
     }
   }]);
 
@@ -48810,9 +48823,7 @@ var EventDetails = function (_Component) {
   _createClass(EventDetails, [{
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      //Important! If your component is navigating based on some global state(from say componentWillReceiveProps)
-      //always reset that global state back to null when you REMOUNT
-      // this.props.resetMe();
+      this.props.resetMe();
     }
   }, {
     key: 'componentDidMount',
@@ -48852,7 +48863,7 @@ var EventDetails = function (_Component) {
           return _react2.default.createElement(
             'div',
             { className: 'event responsive-container' },
-            _react2.default.createElement(_event_editz2.default, { event: event }),
+            _react2.default.createElement(_event_editz2.default, { event: event, loading: loading }),
             _react2.default.createElement(
               'button',
               { onClick: this.toggleEdit },
