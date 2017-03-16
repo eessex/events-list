@@ -67,7 +67,7 @@ export default function(state = INITIAL_STATE, action) {
     if(!result) {
       error = {message: action.payload.message};
     } else {
-      error = {title: result.title, categories: result.categories, description: result.description};
+      error = {title: result.title, categories: result.start_date, description: result.description};
     }
     return {...state, newEvent:{...state.newEvent, error: error, loading: false}}
   case RESET_EVENT_FIELDS:

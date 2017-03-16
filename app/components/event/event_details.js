@@ -12,7 +12,7 @@ class EventDetails extends Component {
     super(props);
     // console.log(props)
     this.state = {
-      isEditing: false
+      isEditing: true
     };
     this.toggleEdit = this._toggleEdit.bind(this)
   }
@@ -41,7 +41,7 @@ class EventDetails extends Component {
       if (this.state && this.state.isEditing) {
         return (
           <div className="event responsive-container">
-            <EventEdit event={event} loading={loading} />
+            <EventEdit event={event} loading={loading} error={error} activeEvent={this.props.activeEvent} resetMe={this.props.resetMe} />
             <button onClick={this.toggleEdit}>Preview</button>
           </div>
         )
