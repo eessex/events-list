@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "94a565910213ba862f34"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6cac14b8ba0e7d10fc22"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -56184,7 +56184,6 @@ var EventsForm = function (_React$Component) {
     value: function _onInputChange(e) {
       var changed = e.target.name;
       var state = this.state;
-      debugger;
       if (changed == 'all_day') {
         state.event.all_day = e.target.checked;
         (0, _jquery2.default)('input[type=time]').toggle('display');
@@ -56204,7 +56203,6 @@ var EventsForm = function (_React$Component) {
   }, {
     key: 'onSubmit',
     value: function onSubmit(e) {
-      debugger;
       e.preventDefault();
       var date = this.formatDateInput();
       var event = {

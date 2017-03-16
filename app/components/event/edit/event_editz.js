@@ -77,7 +77,6 @@ class EventsForm extends React.Component {
   _onInputChange(e) {
     const changed = e.target.name
     const state = this.state
-    debugger
     if (changed == 'all_day') {
       state.event.all_day = e.target.checked
       $('input[type=time]').toggle('display')
@@ -101,7 +100,6 @@ class EventsForm extends React.Component {
   }
 
   onSubmit(e) {
-    debugger
     e.preventDefault()
     const date = this.formatDateInput()
     const event = {
