@@ -8,6 +8,7 @@ var EventsSchema = new Schema({
   end_date: Date,
   images: [{url: String}],
   organizer: String,
+  published: Boolean,
   slug: String,
   slugs: [String],
   start_date: Date,

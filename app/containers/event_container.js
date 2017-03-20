@@ -1,11 +1,10 @@
 import EventDetails from '../components/event/event_details.js';
-import { fetchEvent, fetchEventSuccess, fetchEventFailure, resetActiveEvent, resetDeletedEvent, resetNewPost } from '../actions/events';
+import { updateEvent, updateEventSuccess, updateEventFailure, fetchEvent, fetchEventSuccess, fetchEventFailure, resetActiveEvent, resetDeletedEvent, resetNewPost } from '../actions/events';
 import { connect } from 'react-redux';
 
 
 
 function mapStateToProps(globalState, ownProps) {
-  // debugger
   return {
     activeEvent: globalState.events.activeEvent,
     newEvent: globalState.events.newEvent,
@@ -15,6 +14,17 @@ function mapStateToProps(globalState, ownProps) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    updateEvent: (event) => {
+      dispatch(updateEvent(event))
+        .then((result) => {
+          console.log(result.payload)
+          if (result.payload.response && result.payload.response.status !== 200) {
+            dispatch(updateEventFailure(result.payload.response.data));
+          } else {
+            dispatch(updateEventSuccess(result.payload.data))
+          }
+        })
+    },
     fetchEvent: (_id) => {
       dispatch(fetchEvent(_id))
         .then((result) => {

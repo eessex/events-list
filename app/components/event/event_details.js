@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
-import EventEdit from './edit/event_editz'
-import EventShow from './event_show'
+import EventEdit from './edit/event_edit'
+import EventShow from './show/event_show'
 
 class EventDetails extends Component {
   static contextTypes = {
@@ -10,7 +10,6 @@ class EventDetails extends Component {
 
   constructor(props) {
     super(props);
-    // console.log(props)
     this.state = {
       isEditing: true
     };
@@ -41,7 +40,7 @@ class EventDetails extends Component {
       if (this.state && this.state.isEditing) {
         return (
           <div className="event responsive-container">
-            <EventEdit event={event} loading={loading} error={error} activeEvent={this.props.activeEvent} resetMe={this.props.resetMe} />
+            <EventEdit event={event} loading={loading} error={error} updateEvent={this.props.updateEvent} activeEvent={this.props.activeEvent} resetMe={this.props.resetMe} />
             <button onClick={this.toggleEdit}>Preview</button>
           </div>
         )

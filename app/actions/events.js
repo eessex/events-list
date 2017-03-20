@@ -24,6 +24,11 @@ export const FETCH_EVENT_SUCCESS = 'FETCH_EVENT_SUCCESS';
 export const FETCH_EVENT_FAILURE = 'FETCH_EVENT_FAILURE';
 export const RESET_ACTIVE_EVENT = 'RESET_ACTIVE_EVENT';
 
+//Update event
+export const UPDATE_EVENT = 'UPDATE_EVENT';
+export const UPDATE_EVENT_SUCCESS = 'UPDATE_EVENT_SUCCESS';
+export const UPDATE_EVENT_FAILURE = 'UPDATE_EVENT_FAILURE';
+
 //Delete event
 export const DELETE_EVENT = 'DELETE_EVENT';
 export const DELETE_EVENT_SUCCESS = 'DELETE_EVENT_SUCCESS';
@@ -161,6 +166,36 @@ export function resetActiveEvent() {
   return {
     type: RESET_ACTIVE_EVENT
   }
+}
+
+export function updateEvent(event) {  //tokenFromStorage
+  const request = axios({
+    method: 'patch',
+    data: event,
+    url: `${ROOT_URL}/events/${event._id}`
+    // headers: {
+    //   'Authorization': `Bearer ${tokenFromStorage}`
+    // }
+  });
+
+  return {
+    type: UPDATE_EVENT,
+    payload: request
+  };
+}
+
+export function updateEventSuccess(event) {
+  return {
+    type: UPDATE_EVENT_SUCCESS,
+    payload: event
+  };
+}
+
+export function updateEventFailure(error) {
+  return {
+    type: UPDATE_EVENT_FAILURE,
+    payload: error
+  };
 }
 
 

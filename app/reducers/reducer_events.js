@@ -3,6 +3,7 @@ import {
 	FETCH_EVENT, FETCH_EVENT_SUCCESS,  FETCH_EVENT_FAILURE, RESET_ACTIVE_EVENT,
 	CREATE_EVENT, CREATE_EVENT_SUCCESS, CREATE_EVENT_FAILURE, RESET_NEW_EVENT,
 	DELETE_EVENT, DELETE_EVENT_SUCCESS, DELETE_EVENT_FAILURE, RESET_DELETED_EVENT,
+  UPDATE_EVENT, UPDATE_EVENT_SUCCESS,
   VALIDATE_EVENT_FIELDS,VALIDATE_EVENT_FIELDS_SUCCESS, VALIDATE_EVENT_FIELDS_FAILURE, RESET_EVENT_FIELDS
 } from '../actions/events';
 
@@ -46,6 +47,11 @@ export default function(state = INITIAL_STATE, action) {
   	return {...state, newEvent: {event:null, error:error, loading: false}}
   case RESET_NEW_EVENT:
   	return {...state,  newEvent:{event:null, error:null, loading: false}}
+
+  case UPDATE_EVENT:
+    return { ...state, activeEvent:{...state.activeEvent, loading: true}};
+  case UPDATE_EVENT_SUCCESS:
+    return { ...state, activeEvent: {event: action.payload, error:null, loading: false}};
 
 
   case DELETE_EVENT:
