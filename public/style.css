@@ -9,10 +9,6 @@
     padding: .25em 1em; }
   .events--table .th, .events--table .td {
     width: 15%; }
-.event--add__form {
-  display: flex;
-  flex-direction: column;
-  max-width: 750px; }
 h5, .h5 {
   font-size: 0.83em;
   font-weight: 600; }

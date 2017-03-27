@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import EventEdit from './edit/event_edit'
 import EventShow from './show/event_show'
 
@@ -11,7 +10,7 @@ class EventDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEditing: true
+      isEditing: false
     };
     this.toggleEdit = this._toggleEdit.bind(this)
   }
@@ -47,7 +46,7 @@ class EventDetails extends Component {
        } else {
         return (
           <div className="event responsive-container">
-            <EventShow event={event} loading={loading} />
+            <EventShow event={event} loading={loading} createEvent={this.props.createEvent}/>
             <button onClick={this.toggleEdit}>Edit</button>
           </div>
         )

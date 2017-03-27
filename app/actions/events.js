@@ -95,7 +95,8 @@ export function resetEventFields() {
 }
 
 
-export function createEvent(props, tokenFromStorage) {
+export function createEvent(props) {
+  debugger
   const request = axios({
     method: 'event',
     data: props,

@@ -1,5 +1,5 @@
 import EventDetails from '../components/event/event_details.js';
-import { updateEvent, updateEventSuccess, updateEventFailure, fetchEvent, fetchEventSuccess, fetchEventFailure, resetActiveEvent, resetDeletedEvent, resetNewPost } from '../actions/events';
+import { updateEvent, updateEventSuccess, updateEventFailure, createEvent, createEventSuccess, createEventFailure, fetchEvent, fetchEventSuccess, fetchEventFailure, resetActiveEvent, resetDeletedEvent, resetNewEvent } from '../actions/events';
 import { connect } from 'react-redux';
 
 
@@ -25,6 +25,18 @@ const mapDispatchToProps = (dispatch) => {
           }
         })
     },
+    createEvent: (event) => {
+      dispatch(createEvent(event))
+        .then((result) => {
+          console.log(result.payload)
+          debugger
+          if (result.payload.response && result.payload.response.status !== 200) {
+            dispatch(createEventFailure(result.payload.response.data));
+          } else {
+            dispatch(createEventSuccess(result.payload.data))
+          }
+        })
+    },
     fetchEvent: (_id) => {
       dispatch(fetchEvent(_id))
         .then((result) => {
@@ -41,7 +53,7 @@ const mapDispatchToProps = (dispatch) => {
       //clean up both activeEvent(currrently open) and deletedEvent(open and being deleted) states
       dispatch(resetActiveEvent());
       dispatch(resetDeletedEvent());
-      dispatch(resetNewPost());
+      dispatch(resetNewEvent());
     }
   }
 }

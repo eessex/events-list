@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { deleteEvent } from '../../actions/events';
+import { deleteEvent, createEvent } from '../../actions/events';
 import EventContainer from '../../containers/event_container.js';
 
 class EventShow extends Component {
@@ -16,7 +16,7 @@ class EventShow extends Component {
   render() {
     return (
       <div className='container'>
-        <EventContainer id={this.props.params._id}/>
+        <EventContainer id={this.props.params._id} createEvent={createEvent}/>
       </div>
     );
   }
