@@ -12,7 +12,7 @@ class EventShow extends Component {
   getImages(event) {
   	if (event.images && event.images.length > 0) {
   	var images = event.images.map(function(image, i) {
-  		return <p key={i} id={i}>{image.url}</p>
+  		return <div key={i} id={i}><img src={image.url} width='400'/></div>
   		}.bind(this))
 	  	return images
   	}

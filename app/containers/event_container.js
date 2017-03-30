@@ -7,7 +7,20 @@ import { connect } from 'react-redux';
 function mapStateToProps(globalState, ownProps) {
   return {
     activeEvent: globalState.events.activeEvent,
-    newEvent: globalState.events.newEvent,
+    newEvent: {
+        all_day: false,
+        description: '',
+        end_date: null,
+        images: [],
+        organizer: '',
+        published: false,
+        slug: '',
+        slugs: [],
+        start_date: null,
+        title: '',
+        urls: [],
+        venue: ''
+      },
     eventId: ownProps.id
   };
 }

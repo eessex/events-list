@@ -20,7 +20,9 @@ class EventDetails extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchEvent(this.props.eventId);
+    if (this.props.eventId) {
+      this.props.fetchEvent(this.props.eventId);
+    }
   }
   componentDidReceiveProps() {
   }
@@ -35,6 +37,12 @@ class EventDetails extends Component {
       return <div className="container">Loading...</div>;
     } else if (error) {
       return  <div className="alert alert-danger">{error.message}</div>
+    } else if (!this.props.eventId) {
+      return (
+        <div className="event responsive-container">
+          <EventEdit event={event} new={true} loading={loading} error={error} updateEvent={this.props.createEvent} resetMe={this.props.resetMe} />
+        </div>
+      )
     } else {
       if (this.state && this.state.isEditing) {
         return (
@@ -46,7 +54,7 @@ class EventDetails extends Component {
        } else {
         return (
           <div className="event responsive-container">
-            <EventShow event={event} loading={loading} createEvent={this.props.createEvent}/>
+            <EventShow event={event} loading={loading} />
             <button onClick={this.toggleEdit}>Edit</button>
           </div>
         )

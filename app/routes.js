@@ -10,7 +10,6 @@ import TestEditor from './components/pages/test_editor.js';
 
 import EventsIndex from './components/pages/events_index.js';
 import EventShow from './components/pages/event_show.js';
-import EventsNew from './components/event/add/event_add.js';
 
 export default (
     <Route path="/" component={Main}>
@@ -18,7 +17,7 @@ export default (
       <Route path="info" component={Info}/>
       <Route path="/events/:_id" component={EventShow}/>
       <Route path="/events" component={EventsIndex}/>
-      <Route path="/new/event" component={EventsNew}/>
+      <Route path="/new/event" component={EventShow}/>
       <Route path="*" component={NotFound}/>
     </Route>
 );

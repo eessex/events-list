@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8fb506125940086e4e43"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "5eae1093023906516c50"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -18161,6 +18161,7 @@ function resetActiveEvent() {
 
 function updateEvent(event) {
   //tokenFromStorage
+  debugger;
   var request = (0, _axios2.default)({
     method: 'patch',
     data: event,
@@ -55363,78 +55364,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 364 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(4);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _jquery = __webpack_require__(174);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _moment = __webpack_require__(1);
-
-var _moment2 = _interopRequireDefault(_moment);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var EventAdd = function (_React$Component) {
-  _inherits(EventAdd, _React$Component);
-
-  function EventAdd(props) {
-    _classCallCheck(this, EventAdd);
-
-    var _this = _possibleConstructorReturn(this, (EventAdd.__proto__ || Object.getPrototypeOf(EventAdd)).call(this, props));
-
-    _this.componentDidMount = function () {
-      return _this._componentDidMount();
-    };
-
-    _this.state = {
-      event: {}
-    };
-    return _this;
-  }
-
-  _createClass(EventAdd, [{
-    key: '_componentDidMount',
-    value: function _componentDidMount() {
-      debugger;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'h1',
-        null,
-        'hello'
-      );
-    }
-  }]);
-
-  return EventAdd;
-}(_react2.default.Component);
-
-exports.default = EventAdd;
-
-/***/ }),
+/* 364 */,
 /* 365 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -55496,6 +55426,9 @@ var EventsForm = function (_React$Component) {
     _this.onSubmit = function (e) {
       return _this._onSubmit(e);
     };
+    _this.addEndDate = function (e) {
+      return _this._addEndDate(e);
+    };
 
     _this.state = {
       successVisible: false,
@@ -55505,7 +55438,8 @@ var EventsForm = function (_React$Component) {
       start_date: '',
       start_time: '',
       end_date: '',
-      end_time: ''
+      end_time: '',
+      hasEndDate: false
     };
     return _this;
   }
@@ -55519,11 +55453,16 @@ var EventsForm = function (_React$Component) {
     key: 'loadEvent',
     value: function loadEvent() {
       var date = this.loadFormattedDates(this.props.event);
+      var hasEndDate = false;
+      if (date.end_date) {
+        hasEndDate = true;
+      }
       this.setState({
         start_date: date.start_date,
         start_time: date.start_time,
         end_date: date.end_date,
-        end_time: date.end_time
+        end_time: date.end_time,
+        hasEndDate: hasEndDate
       });
     }
   }, {
@@ -55533,6 +55472,7 @@ var EventsForm = function (_React$Component) {
       var start_time = '';
       var end_date = '';
       var end_time = '';
+      var hasEndDate = false;
       if (event.start_date) {
         start_date = (0, _moment2.default)(event.start_date).format('YYYY-MM-DD');
         start_time = (0, _moment2.default)(event.start_date).format('HH:mm');
@@ -55540,8 +55480,9 @@ var EventsForm = function (_React$Component) {
       if (event.end_date) {
         end_date = (0, _moment2.default)(event.end_date).format('YYYY-MM-DD');
         end_time = (0, _moment2.default)(event.end_date).format('HH:mm');
+        hasEndDate = true;
       }
-      return { start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time };
+      return { start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time, hasEndDate: hasEndDate };
     }
   }, {
     key: 'formatDateInput',
@@ -55556,12 +55497,15 @@ var EventsForm = function (_React$Component) {
         end_time = '20:00';
       } else {
         start_time = form.start_time.value;
-        end_time = form.end_time.value;
+        end_time = '';
+        if (form.end_time) {
+          end_time = form.end_time.value;
+        }
       }
       var start_date = (0, _moment2.default)(form.start_date.value + ' ' + start_time);
       var date = { start_date: start_date, all_day: all_day };
-      if (form.end_date.value) {
-        if (form.end_time.value) {
+      if (form.end_date && form.end_date.value) {
+        if (form.end_time && form.end_time.value) {
           date.end_date = (0, _moment2.default)(form.end_date.value + ' ' + end_time);
         } else {
           date.end_date = (0, _moment2.default)(form.end_date.value);
@@ -55573,22 +55517,27 @@ var EventsForm = function (_React$Component) {
     key: '_onInputChange',
     value: function _onInputChange(e) {
       var changed = e.target.name;
-      var state = this.state;
+      var newState = this.state;
       if (changed == 'all_day') {
-        state.event.all_day = e.target.checked;
+        newState.event.all_day = e.target.checked;
         (0, _jquery2.default)('input[type=time]').toggle('display');
       } else if (changed == 'published') {
         if (e.target.value == 'true') {
-          state.event[changed] = true;
+          newState.event[changed] = true;
         } else {
-          state.event[changed] = false;
+          newState.event[changed] = false;
         }
-      } else if (changed != 'start_date' && changed != 'start_time' && changed != 'end_time' && changed != 'url' && changed != 'image') {
-        state.event[changed] = e.target.value;
+      } else if (changed != 'start_date' && changed != 'start_time' && changed != 'end_date' && changed != 'end_time') {
+        newState.event[changed] = e.target.value;
       } else {
-        state[changed] = e.target.value;
+        newState[changed] = e.target.value;
       }
-      this.setState({ state: state });
+      this.setState({
+        event: newState.event,
+        start_date: newState.start_date,
+        start_time: newState.start_time,
+        end_date: newState.end_date,
+        end_time: newState.end_time });
     }
   }, {
     key: '_onSubmit',
@@ -55610,8 +55559,12 @@ var EventsForm = function (_React$Component) {
       // update slug if title has changed
       if (date.end_date) {
         event.end_date = (0, _moment2.default)(date.end_date).toISOString();
+        this.setState({ hasEndDate: true });
       }
-      this.props.updateEvent(this.props.event);
+      if (!this.props.new) {
+        event._id = this.state.event._id;
+      }
+      this.props.updateEvent(event);
       this.showSuccess();
     }
   }, {
@@ -55709,13 +55662,12 @@ var EventsForm = function (_React$Component) {
       if (event.images && event.images.length > 0) {
         var images = event.images.map(function (image, i) {
           return _react2.default.createElement(
-            'span',
-            { key: i, id: i, onClick: this.deleteImage },
-            image.url,
-            ' ',
+            'div',
+            { key: i, id: i },
+            _react2.default.createElement('img', { src: image.url, width: '400' }),
             _react2.default.createElement(
               'span',
-              { id: i, className: 'delete' },
+              { id: i, onClick: this.deleteImage, className: 'delete' },
               'x'
             )
           );
@@ -55763,6 +55715,24 @@ var EventsForm = function (_React$Component) {
       return print_date;
     }
   }, {
+    key: 'printEndDate',
+    value: function printEndDate() {
+      if (this.state.hasEndDate) {
+        return this.printDateInput('end');
+      } else {
+        return _react2.default.createElement(
+          'button',
+          { onClick: this.addEndDate },
+          '+ End Date'
+        );
+      }
+    }
+  }, {
+    key: '_addEndDate',
+    value: function _addEndDate(e) {
+      this.setState({ hasEndDate: true });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -55786,6 +55756,12 @@ var EventsForm = function (_React$Component) {
         var all_day = false;
       }
 
+      if (!this.props.new) {
+        var title = event.title;
+      } else {
+        var title = 'New Event';
+      }
+
       if (loading) {
         return _react2.default.createElement(
           'p',
@@ -55799,7 +55775,7 @@ var EventsForm = function (_React$Component) {
           _react2.default.createElement(
             'h1',
             null,
-            event.title
+            title
           ),
           _react2.default.createElement(
             'form',
@@ -55831,21 +55807,18 @@ var EventsForm = function (_React$Component) {
             _react2.default.createElement(
               'div',
               { className: 'form-group title' },
-              _react2.default.createElement(
-                'label',
-                null,
-                'Title:'
-              ),
               _react2.default.createElement('input', { type: 'text',
                 name: 'title',
                 required: true,
-                defaultValue: this.state.event.title })
+                placeholder: 'Title',
+                defaultValue: this.state.event.title,
+                onChange: this.onInputChange })
             ),
             _react2.default.createElement(
               'div',
               { className: 'field-group dates' },
               this.printDateInput('start'),
-              this.printDateInput('end'),
+              this.printEndDate(),
               _react2.default.createElement(
                 'div',
                 { className: 'form-group all-day' },
@@ -55870,7 +55843,9 @@ var EventsForm = function (_React$Component) {
               ),
               _react2.default.createElement('input', { type: 'text',
                 name: 'venue',
-                defaultValue: this.state.event.venue })
+                placeholder: 'Venue',
+                defaultValue: this.state.event.venue,
+                onChange: this.onInputChange })
             ),
             _react2.default.createElement(
               'div',
@@ -55882,6 +55857,7 @@ var EventsForm = function (_React$Component) {
               ),
               _react2.default.createElement('input', { type: 'text',
                 name: 'organizer',
+                placeholder: 'Organizer',
                 defaultValue: this.state.event.organizer,
                 onChange: this.onInputChange })
             ),
@@ -55912,9 +55888,7 @@ var EventsForm = function (_React$Component) {
                 ),
                 _react2.default.createElement('input', { type: 'text',
                   name: 'url',
-                  placeholder: 'External Link',
-                  defaultValue: this.state.url,
-                  onChange: this.onInputChange }),
+                  placeholder: 'External Link' }),
                 _react2.default.createElement(
                   'button',
                   { type: 'url', className: 'add', onClick: this.addUrl },
@@ -55936,9 +55910,7 @@ var EventsForm = function (_React$Component) {
                 ),
                 _react2.default.createElement('input', { type: 'text',
                   name: 'image',
-                  placeholder: 'Image',
-                  defaultValue: this.state.image,
-                  onChange: this.onInputChange }),
+                  placeholder: 'Image' }),
                 _react2.default.createElement(
                   'button',
                   { type: 'image', className: 'add', onClick: this.addImage },
@@ -56029,7 +56001,9 @@ var EventDetails = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.props.fetchEvent(this.props.eventId);
+      if (this.props.eventId) {
+        this.props.fetchEvent(this.props.eventId);
+      }
     }
   }, {
     key: 'componentDidReceiveProps',
@@ -56059,6 +56033,12 @@ var EventDetails = function (_Component) {
           { className: 'alert alert-danger' },
           error.message
         );
+      } else if (!this.props.eventId) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'event responsive-container' },
+          _react2.default.createElement(_event_edit2.default, { event: event, 'new': true, loading: loading, error: error, updateEvent: this.props.createEvent, resetMe: this.props.resetMe })
+        );
       } else {
         if (this.state && this.state.isEditing) {
           return _react2.default.createElement(
@@ -56075,7 +56055,7 @@ var EventDetails = function (_Component) {
           return _react2.default.createElement(
             'div',
             { className: 'event responsive-container' },
-            _react2.default.createElement(_event_show2.default, { event: event, loading: loading, createEvent: this.props.createEvent }),
+            _react2.default.createElement(_event_show2.default, { event: event, loading: loading }),
             _react2.default.createElement(
               'button',
               { onClick: this.toggleEdit },
@@ -56130,26 +56110,26 @@ var EventShow = function (_Component) {
   }
 
   _createClass(EventShow, [{
-    key: "getImages",
+    key: 'getImages',
     value: function getImages(event) {
       if (event.images && event.images.length > 0) {
         var images = event.images.map(function (image, i) {
           return _react2.default.createElement(
-            "p",
+            'div',
             { key: i, id: i },
-            image.url
+            _react2.default.createElement('img', { src: image.url, width: '400' })
           );
         }.bind(this));
         return images;
       }
     }
   }, {
-    key: "getLinks",
+    key: 'getLinks',
     value: function getLinks(event) {
       if (event.urls && event.urls.length > 0) {
         var urls = event.urls.map(function (url, i) {
           return _react2.default.createElement(
-            "a",
+            'a',
             { href: url, key: i, id: i },
             url
           );
@@ -56158,7 +56138,7 @@ var EventShow = function (_Component) {
       }
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       var _props = this.props,
           loading = _props.loading,
@@ -56166,38 +56146,38 @@ var EventShow = function (_Component) {
 
       if (loading) {
         return _react2.default.createElement(
-          "p",
+          'p',
           null,
-          "loading"
+          'loading'
         );
       } else {
         return _react2.default.createElement(
-          "div",
-          { className: "event--show" },
+          'div',
+          { className: 'event--show' },
           _react2.default.createElement(
-            "h1",
+            'h1',
             null,
             event.title
           ),
           _react2.default.createElement(
-            "h3",
+            'h3',
             null,
             event.start_date,
-            " ",
+            ' ',
             event.end_date
           ),
           _react2.default.createElement(
-            "h3",
+            'h3',
             null,
             event.venue
           ),
           _react2.default.createElement(
-            "h3",
+            'h3',
             null,
             event.organizer
           ),
           _react2.default.createElement(
-            "p",
+            'p',
             null,
             event.description
           ),
@@ -57224,7 +57204,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function mapStateToProps(globalState, ownProps) {
   return {
     activeEvent: globalState.events.activeEvent,
-    newEvent: globalState.events.newEvent,
+    newEvent: {
+      all_day: false,
+      description: '',
+      end_date: null,
+      images: [],
+      organizer: '',
+      published: false,
+      slug: '',
+      slugs: [],
+      start_date: null,
+      title: '',
+      urls: [],
+      venue: ''
+    },
     eventId: ownProps.id
   };
 }
@@ -57452,10 +57445,6 @@ var _event_show = __webpack_require__(374);
 
 var _event_show2 = _interopRequireDefault(_event_show);
 
-var _event_add = __webpack_require__(364);
-
-var _event_add2 = _interopRequireDefault(_event_add);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _react2.default.createElement(
@@ -57465,7 +57454,7 @@ exports.default = _react2.default.createElement(
   _react2.default.createElement(_reactRouter.Route, { path: 'info', component: _info2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '/events/:_id', component: _event_show2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '/events', component: _events_index2.default }),
-  _react2.default.createElement(_reactRouter.Route, { path: '/new/event', component: _event_add2.default }),
+  _react2.default.createElement(_reactRouter.Route, { path: '/new/event', component: _event_show2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '*', component: _error_2.default })
 );
 

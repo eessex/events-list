@@ -13,6 +13,7 @@ class EventsForm extends React.Component {
     this.addImage = (e) => this._addImage(e)
     this.addUrl = (e) => this._addUrl(e)
     this.onSubmit = (e) => this._onSubmit(e)
+    this.addEndDate = (e) => this._addEndDate(e)
 
     this.state = {
       successVisible: false,
@@ -22,7 +23,8 @@ class EventsForm extends React.Component {
       start_date: '',
       start_time: '',
       end_date: '',
-      end_time: ''
+      end_time: '',
+      hasEndDate: false
     };
   }
 
@@ -32,11 +34,16 @@ class EventsForm extends React.Component {
 
   loadEvent() {
     var date = this.loadFormattedDates(this.props.event)
+    var hasEndDate = false
+    if (date.end_date) {
+      hasEndDate = true
+    }
     this.setState({
       start_date: date.start_date,
       start_time: date.start_time,
       end_date: date.end_date,
-      end_time: date.end_time
+      end_time: date.end_time,
+      hasEndDate: hasEndDate
     })
   }
 
@@ -45,6 +52,7 @@ class EventsForm extends React.Component {
     var start_time = ''
     var end_date = ''
     var end_time = ''
+    var hasEndDate = false
     if (event.start_date) {
       start_date = moment(event.start_date).format('YYYY-MM-DD')
       start_time = moment(event.start_date).format('HH:mm')
@@ -52,8 +60,9 @@ class EventsForm extends React.Component {
     if (event.end_date) {
       end_date = moment(event.end_date).format('YYYY-MM-DD')
       end_time = moment(event.end_date).format('HH:mm')
+      hasEndDate = true
     }
-    return {start_date, start_time, end_date, end_time}
+    return {start_date, start_time, end_date, end_time, hasEndDate}
   }
 
   formatDateInput() {
@@ -67,12 +76,15 @@ class EventsForm extends React.Component {
       end_time = '20:00'
     } else {
       start_time = form.start_time.value
-      end_time = form.end_time.value
+      end_time = ''
+      if (form.end_time) {
+        end_time = form.end_time.value
+      }
     }
     const start_date = moment(form.start_date.value + ' ' + start_time)
     const date = {start_date: start_date, all_day: all_day}
-    if (form.end_date.value) {
-      if (form.end_time.value) {
+    if (form.end_date && form.end_date.value) {
+      if (form.end_time && form.end_time.value) {
         date.end_date = moment(form.end_date.value + ' ' + end_time)
       } else {
         date.end_date = moment(form.end_date.value)
@@ -83,27 +95,31 @@ class EventsForm extends React.Component {
 
   _onInputChange(e) {
     const changed = e.target.name
-    const state = this.state
+    const newState = this.state
     if (changed == 'all_day') {
-      state.event.all_day = e.target.checked
+      newState.event.all_day = e.target.checked
       $('input[type=time]').toggle('display')
     } else if (changed == 'published') {
       if (e.target.value == 'true') {
-        state.event[changed] = true
+        newState.event[changed] = true
       } else {
-        state.event[changed] = false
+        newState.event[changed] = false
       }
     } else if (
       changed != 'start_date' &&
       changed != 'start_time' &&
-      changed != 'end_time' &&
-      changed != 'url' &&
-      changed != 'image') {
-      state.event[changed] = e.target.value
+      changed != 'end_date' &&
+      changed != 'end_time') {
+      newState.event[changed] = e.target.value
     } else {
-      state[changed] = e.target.value
+      newState[changed] = e.target.value
     }
-    this.setState({state})
+    this.setState({
+      event: newState.event,
+      start_date: newState.start_date,
+      start_time: newState.start_time,
+      end_date: newState.end_date,
+      end_time: newState.end_time})
   }
 
   _onSubmit(e) {
@@ -124,8 +140,12 @@ class EventsForm extends React.Component {
   // update slug if title has changed
     if (date.end_date) {
       event.end_date = moment(date.end_date).toISOString()
+      this.setState({hasEndDate: true})
     }
-    this.props.updateEvent(this.props.event)
+    if (!this.props.new) {
+      event._id = this.state.event._id
+    }
+    this.props.updateEvent(event)
     this.showSuccess()
   }
 
@@ -202,7 +222,12 @@ class EventsForm extends React.Component {
   printFormattedImages(event) {
     if (event.images && event.images.length > 0) {
       var images = event.images.map(function(image, i) {
-        return <span key={i} id={i} onClick={this.deleteImage}>{image.url} <span id={i} className='delete'>x</span></span>
+        return (
+          <div key={i} id={i}>
+            <img src={image.url} width='400' />
+            <span id={i} onClick={this.deleteImage} className='delete'>x</span>
+          </div>
+          )
       }.bind(this));
       return images
     }
@@ -239,6 +264,18 @@ class EventsForm extends React.Component {
     return print_date
   }
 
+  printEndDate() {
+    if (this.state.hasEndDate) {
+      return this.printDateInput('end')
+    } else {
+      return <button onClick={this.addEndDate}>+ End Date</button>
+    }
+  }
+
+  _addEndDate(e) {
+    this.setState({hasEndDate: true})
+  }
+
   render() {
     const { loading, event } = this.props;
 
@@ -254,12 +291,18 @@ class EventsForm extends React.Component {
       var all_day = false
     }
 
+    if (!this.props.new) {
+      var title = event.title
+    } else {
+      var title = 'New Event'
+    }
+
     if (loading) {
       return <p>loading</p>
     } else {
       return (
         <div className="event--edit">
-          <h1>{event.title}</h1>
+          <h1>{title}</h1>
           <form onChange={this.onChange} onSubmit={this.onSubmit} name='EventEdit' className='event--edit__form'>
           <div className='form-group published'>
             <label>Status:</label>
@@ -270,15 +313,16 @@ class EventsForm extends React.Component {
             </select>
           </div>
           <div className='form-group title'>
-            <label>Title:</label>
             <input type='text'
               name='title'
               required={true}
-              defaultValue={this.state.event.title} />
+              placeholder='Title'
+              defaultValue={this.state.event.title}
+              onChange={this.onInputChange} />
           </div>
           <div className='field-group dates'>
             {this.printDateInput('start')}
-            {this.printDateInput('end')}
+            {this.printEndDate()}
             <div className='form-group all-day'>
               <input type='checkbox'
                 name='all_day'
@@ -291,12 +335,15 @@ class EventsForm extends React.Component {
             <label>Venue:</label>
             <input type='text'
               name='venue'
-              defaultValue={this.state.event.venue} />
+              placeholder='Venue'
+              defaultValue={this.state.event.venue}
+              onChange={this.onInputChange} />
           </div>
           <div className='form-group organizer'>
             <label>Organizer:</label>
             <input type='text'
               name='organizer'
+              placeholder='Organizer'
               defaultValue={this.state.event.organizer}
               onChange={this.onInputChange} />
           </div>
@@ -313,9 +360,7 @@ class EventsForm extends React.Component {
               <label>External Links:</label>
               <input type='text'
                 name='url'
-                placeholder='External Link'
-                defaultValue={this.state.url}
-                onChange={this.onInputChange} />
+                placeholder='External Link' />
               <button type='url' className='add' onClick={this.addUrl}>New</button>
               {this.printFormattedUrls(this.state.event)}
             </div>
@@ -325,9 +370,7 @@ class EventsForm extends React.Component {
               <label>Images:</label>
               <input type='text'
                 name='image'
-                placeholder='Image'
-                defaultValue={this.state.image}
-                onChange={this.onInputChange} />
+                placeholder='Image' />
               <button type='image' className='add' onClick={this.addImage}>New</button>
               {this.printFormattedImages(this.state.event)}
             </div>
