@@ -16,6 +16,7 @@ class EventDetails extends Component {
   }
 
   componentWillUnmount() {
+    debugger
      this.props.resetMe();
   }
 

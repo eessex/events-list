@@ -170,7 +170,6 @@ export function resetActiveEvent() {
 }
 
 export function updateEvent(event) {  //tokenFromStorage
-  debugger
   const request = axios({
     method: 'patch',
     data: event,

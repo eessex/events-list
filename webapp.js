@@ -30,6 +30,7 @@ router.use(function(req, res, next) {
 
 router.route('/api/events')
   .post(function(req, res) {
+    console.log('REQUEST IS: ' + req.body)
     var event = new Event();
     event = req.body;
     event.save(function(err) {

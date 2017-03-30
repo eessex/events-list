@@ -39,13 +39,16 @@ const mapDispatchToProps = (dispatch) => {
         })
     },
     createEvent: (event) => {
+      debugger
       dispatch(createEvent(event))
         .then((result) => {
           console.log(result.payload)
           debugger
           if (result.payload.response && result.payload.response.status !== 200) {
+            debugger
             dispatch(createEventFailure(result.payload.response.data));
           } else {
+            debugger
             dispatch(createEventSuccess(result.payload.data))
           }
         })

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import moment from 'moment'
 
 class EventShow extends Component {
   static contextTypes = {
@@ -27,6 +28,11 @@ class EventShow extends Component {
   	}
   }
 
+  printEventDate(event) {
+    var start_date = moment(event.start_date).format('YYYY-MM-DD')
+    return <h3>{start_date}</h3>
+  }
+
   render() {
     const { loading, event } = this.props;
     if (loading) {
@@ -35,11 +41,12 @@ class EventShow extends Component {
 	    return (
 	      <div className="event--show">
 	        <h1>{event.title}</h1>
+          {this.getImages(event)}
+          {this.printEventDate(event)}
 	        <h3>{event.start_date} {event.end_date}</h3>
 	        <h3>{event.venue}</h3>
 	        <h3>{event.organizer}</h3>
 	        <p>{event.description}</p>
-	        {this.getImages(event)}
 	        {this.getLinks(event)}
 	      </div>
 	    );
