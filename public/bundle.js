@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "50089de2158cf2664b4d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4f3900b5de6591c2a85e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -18090,23 +18090,22 @@ function resetEventFields() {
 }
 
 function createEvent(props) {
-  debugger;
   var request = (0, _axios2.default)({
-    method: 'event',
+    method: 'post',
+    responseType: 'json',
     data: props,
     url: ROOT_URL + '/events'
   });
-
   return {
     type: CREATE_EVENT,
     payload: request
   };
 }
 
-function createEventSuccess(newEvent) {
+function createEventSuccess(event) {
   return {
     type: CREATE_EVENT_SUCCESS,
-    payload: newEvent
+    payload: event
   };
 }
 
@@ -45324,9 +45323,11 @@ var EventsForm = function (_React$Component) {
         description: this.state.event.description,
         updated_at: (0, _moment2.default)(new Date()).toISOString(),
         published: this.state.event.published,
-        urls: this.state.event.urls,
-        images: this.state.event.images
+        urls: this.state.event.urls || [],
+        images: this.state.event.images || [],
+        slugs: this.state.event.slugs || []
       };
+      // create a slug for a new event
       // update slug if title has changed
       if (date.end_date) {
         event.end_date = (0, _moment2.default)(date.end_date).toISOString();
@@ -45767,7 +45768,6 @@ var EventDetails = function (_Component) {
   _createClass(EventDetails, [{
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      debugger;
       this.props.resetMe();
     }
   }, {
@@ -45777,9 +45777,6 @@ var EventDetails = function (_Component) {
         this.props.fetchEvent(this.props.eventId);
       }
     }
-  }, {
-    key: 'componentDidReceiveProps',
-    value: function componentDidReceiveProps() {}
   }, {
     key: '_toggleEdit',
     value: function _toggleEdit() {
@@ -46991,20 +46988,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function mapStateToProps(globalState, ownProps) {
   return {
     activeEvent: globalState.events.activeEvent,
-    newEvent: {
-      all_day: false,
-      description: '',
-      end_date: null,
-      images: [],
-      organizer: '',
-      published: false,
-      slug: '',
-      slugs: [],
-      start_date: null,
-      title: '',
-      urls: [],
-      venue: ''
-    },
     eventId: ownProps.id
   };
 }
@@ -47013,7 +46996,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     updateEvent: function updateEvent(event) {
       dispatch((0, _events.updateEvent)(event)).then(function (result) {
-        console.log(result.payload);
+        console.log(result.payload.data);
         if (result.payload.response && result.payload.response.status !== 200) {
           dispatch((0, _events.updateEventFailure)(result.payload.response.data));
         } else {
@@ -47022,23 +47005,17 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
       });
     },
     createEvent: function createEvent(event) {
-      debugger;
       dispatch((0, _events.createEvent)(event)).then(function (result) {
         console.log(result.payload);
-        debugger;
         if (result.payload.response && result.payload.response.status !== 200) {
-          debugger;
           dispatch((0, _events.createEventFailure)(result.payload.response.data));
         } else {
-          debugger;
           dispatch((0, _events.createEventSuccess)(result.payload.data));
         }
       });
     },
     fetchEvent: function fetchEvent(_id) {
       dispatch((0, _events.fetchEvent)(_id)).then(function (result) {
-        // Note: Error's "data" is in result.payload.response.data (inside "response")
-        // success's "data" is in result.payload.data
         if (result.payload.response && result.payload.response.status !== 200) {
           dispatch((0, _events.fetchEventFailure)(result.payload.response.data));
         } else {
@@ -47047,10 +47024,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
       });
     },
     resetMe: function resetMe() {
-      //clean up both activeEvent(currrently open) and deletedEvent(open and being deleted) states
       dispatch((0, _events.resetActiveEvent)());
       dispatch((0, _events.resetDeletedEvent)());
-      dispatch((0, _events.resetNewEvent)());
     }
   };
 };
@@ -47141,14 +47116,14 @@ exports.default = function () {
       return _extends({}, state, { activeEvent: { event: null, error: null, loading: false } });
 
     case _events.CREATE_EVENT:
-      return _extends({}, state, { newEvent: _extends({}, state.newEvent, { loading: true }) });
+      return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { loading: true }) });
     case _events.CREATE_EVENT_SUCCESS:
-      return _extends({}, state, { newEvent: { event: action.payload, error: null, loading: false } });
+      return _extends({}, state, { activeEvent: { event: action.payload, error: null, loading: false } });
     case _events.CREATE_EVENT_FAILURE:
       error = action.payload || { message: action.payload.message }; //2nd one is network or server down errors
-      return _extends({}, state, { newEvent: { event: null, error: error, loading: false } });
+      return _extends({}, state, { activeEvent: { event: null, error: error, loading: false } });
     case _events.RESET_NEW_EVENT:
-      return _extends({}, state, { newEvent: { event: null, error: null, loading: false } });
+      return _extends({}, state, { activeEvent: { event: null, error: null, loading: false } });
 
     case _events.UPDATE_EVENT:
       return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { loading: true }) });
@@ -47166,9 +47141,9 @@ exports.default = function () {
       return _extends({}, state, { deletedEvent: { event: null, error: null, loading: false } });
 
     case _events.VALIDATE_EVENT_FIELDS:
-      return _extends({}, state, { newEvent: _extends({}, state.newEvent, { error: null, loading: true }) });
+      return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { error: null, loading: true }) });
     case _events.VALIDATE_EVENT_FIELDS_SUCCESS:
-      return _extends({}, state, { newEvent: _extends({}, state.newEvent, { error: null, loading: false }) });
+      return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { error: null, loading: false }) });
     case _events.VALIDATE_EVENT_FIELDS_FAILURE:
       var result = action.payload;
       if (!result) {
@@ -47176,9 +47151,9 @@ exports.default = function () {
       } else {
         error = { title: result.title, categories: result.start_date, description: result.description };
       }
-      return _extends({}, state, { newEvent: _extends({}, state.newEvent, { error: error, loading: false }) });
+      return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { error: error, loading: false }) });
     case _events.RESET_EVENT_FIELDS:
-      return _extends({}, state, { newEvent: _extends({}, state.newEvent, { error: null, loading: null }) });
+      return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { error: null, loading: null }) });
     default:
       return state;
   }
@@ -47187,7 +47162,6 @@ exports.default = function () {
 var _events = __webpack_require__(63);
 
 var INITIAL_STATE = { eventsList: { events: [], error: null, loading: false },
-  newEvent: { event: null, error: null, loading: false },
   activeEvent: { event: {}, error: null, loading: false },
   deletedEvent: { event: null, error: null, loading: false }
 };

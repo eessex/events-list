@@ -16,16 +16,13 @@ class EventDetails extends Component {
   }
 
   componentWillUnmount() {
-    debugger
-     this.props.resetMe();
+    this.props.resetMe();
   }
 
   componentDidMount() {
     if (this.props.eventId) {
       this.props.fetchEvent(this.props.eventId);
     }
-  }
-  componentDidReceiveProps() {
   }
 
   _toggleEdit() {

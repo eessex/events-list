@@ -9,7 +9,6 @@ import {
 
 
 	const INITIAL_STATE = { eventsList: {events: [], error:null, loading: false},
-							newEvent:{event:null, error: null, loading: false},
 							activeEvent:{event:{}, error:null, loading: false},
 							deletedEvent: {event: null, error:null, loading: false},
 						};
@@ -39,14 +38,14 @@ export default function(state = INITIAL_STATE, action) {
     return { ...state, activeEvent: {event: null, error:null, loading: false}};
 
   case CREATE_EVENT:
-  	return {...state, newEvent: {...state.newEvent, loading: true}}
+  	return {...state, activeEvent: {...state.activeEvent, loading: true}}
   case CREATE_EVENT_SUCCESS:
-  	return {...state, newEvent: {event:action.payload, error:null, loading: false}}
+  	return {...state, activeEvent: {event:action.payload, error:null, loading: false}}
   case CREATE_EVENT_FAILURE:
     error = action.payload || {message: action.payload.message};//2nd one is network or server down errors
-  	return {...state, newEvent: {event:null, error:error, loading: false}}
+  	return {...state, activeEvent: {event:null, error:error, loading: false}}
   case RESET_NEW_EVENT:
-  	return {...state,  newEvent:{event:null, error:null, loading: false}}
+  	return {...state,  activeEvent:{event:null, error:null, loading: false}}
 
   case UPDATE_EVENT:
     return { ...state, activeEvent:{...state.activeEvent, loading: true}};
@@ -65,9 +64,9 @@ export default function(state = INITIAL_STATE, action) {
   	return {...state,  deletedEvent:{event:null, error:null, loading: false}}
 
   case VALIDATE_EVENT_FIELDS:
-    return {...state, newEvent:{...state.newEvent, error: null, loading: true}}
+    return {...state, activeEvent:{...state.activeEvent, error: null, loading: true}}
   case VALIDATE_EVENT_FIELDS_SUCCESS:
-    return {...state, newEvent:{...state.newEvent, error: null, loading: false}}
+    return {...state, activeEvent:{...state.activeEvent, error: null, loading: false}}
   case VALIDATE_EVENT_FIELDS_FAILURE:
     let result = action.payload;
     if(!result) {
@@ -75,9 +74,9 @@ export default function(state = INITIAL_STATE, action) {
     } else {
       error = {title: result.title, categories: result.start_date, description: result.description};
     }
-    return {...state, newEvent:{...state.newEvent, error: error, loading: false}}
+    return {...state, activeEvent:{...state.activeEvent, error: error, loading: false}}
   case RESET_EVENT_FIELDS:
-    return {...state, newEvent:{...state.newEvent, error: null, loading: null}}
+    return {...state, activeEvent:{...state.activeEvent, error: null, loading: null}}
   default:
     return state;
   }

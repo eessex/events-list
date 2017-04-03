@@ -94,28 +94,26 @@ export function resetEventFields() {
   };
 }
 
-
 export function createEvent(props) {
-  debugger
   const request = axios({
-    method: 'event',
+    method: 'post',
+    responseType: 'json',
     data: props,
     url: `${ROOT_URL}/events`,
     // headers: {
     //   'Authorization': `Bearer ${tokenFromStorage}`
     // }
   });
-
   return {
     type: CREATE_EVENT,
     payload: request
   };
 }
 
-export function createEventSuccess(newEvent) {
+export function createEventSuccess(event) {
   return {
     type: CREATE_EVENT_SUCCESS,
-    payload: newEvent
+    payload: event
   };
 }
 

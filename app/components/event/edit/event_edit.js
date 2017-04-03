@@ -134,9 +134,11 @@ class EventsForm extends React.Component {
       description: this.state.event.description,
       updated_at: moment(new Date()).toISOString(),
       published: this.state.event.published,
-      urls: this.state.event.urls,
-      images: this.state.event.images
+      urls: this.state.event.urls || [],
+      images: this.state.event.images || [],
+      slugs: this.state.event.slugs  || []
     }
+  // create a slug for a new event
   // update slug if title has changed
     if (date.end_date) {
       event.end_date = moment(date.end_date).toISOString()

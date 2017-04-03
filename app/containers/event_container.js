@@ -7,20 +7,6 @@ import { connect } from 'react-redux';
 function mapStateToProps(globalState, ownProps) {
   return {
     activeEvent: globalState.events.activeEvent,
-    newEvent: {
-        all_day: false,
-        description: '',
-        end_date: null,
-        images: [],
-        organizer: '',
-        published: false,
-        slug: '',
-        slugs: [],
-        start_date: null,
-        title: '',
-        urls: [],
-        venue: ''
-      },
     eventId: ownProps.id
   };
 }
@@ -30,7 +16,7 @@ const mapDispatchToProps = (dispatch) => {
     updateEvent: (event) => {
       dispatch(updateEvent(event))
         .then((result) => {
-          console.log(result.payload)
+          console.log(result.payload.data)
           if (result.payload.response && result.payload.response.status !== 200) {
             dispatch(updateEventFailure(result.payload.response.data));
           } else {
@@ -39,16 +25,12 @@ const mapDispatchToProps = (dispatch) => {
         })
     },
     createEvent: (event) => {
-      debugger
       dispatch(createEvent(event))
         .then((result) => {
           console.log(result.payload)
-          debugger
           if (result.payload.response && result.payload.response.status !== 200) {
-            debugger
             dispatch(createEventFailure(result.payload.response.data));
           } else {
-            debugger
             dispatch(createEventSuccess(result.payload.data))
           }
         })
@@ -56,8 +38,6 @@ const mapDispatchToProps = (dispatch) => {
     fetchEvent: (_id) => {
       dispatch(fetchEvent(_id))
         .then((result) => {
-          // Note: Error's "data" is in result.payload.response.data (inside "response")
-          // success's "data" is in result.payload.data
           if (result.payload.response && result.payload.response.status !== 200) {
             dispatch(fetchEventFailure(result.payload.response.data));
           } else {
@@ -66,10 +46,8 @@ const mapDispatchToProps = (dispatch) => {
         })
     },
     resetMe: () => {
-      //clean up both activeEvent(currrently open) and deletedEvent(open and being deleted) states
       dispatch(resetActiveEvent());
       dispatch(resetDeletedEvent());
-      dispatch(resetNewEvent());
     }
   }
 }

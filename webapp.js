@@ -29,11 +29,22 @@ router.use(function(req, res, next) {
 });
 
 router.route('/api/events')
+  // .post(function (req, res, next) {
+  //     console.log('REQUEST IS: ' + JSON.stringify(req.body))
+  //     var newEvent = new Event(req.body);
+  //     console.log(newEvent)
+  //     newEvent.save(function (err, post) {
+  //         if (err) { return next(err) }
+  //         console.log('POST IS: ' + post)
+  //         // res.status(201).json(post)
+  //       // res.send({redirect: '/events/' + post._id})
+  //     })
+  //   })
+
   .post(function(req, res) {
-    console.log('REQUEST IS: ' + req.body)
-    var event = new Event();
-    event = req.body;
-    event.save(function(err) {
+    console.log('REQUEST IS: ' + JSON.stringify(req.body))
+    var newEvent = new Event(req.body);
+    newEvent.save(function(err) {
       if (err)
         res.send(err);
       res.json({ message: 'Event created.' });
@@ -70,7 +81,8 @@ router.route('/api/events/:_id')
         start_date: req.body.start_date,
         title: req.body.title,
         urls: req.body.urls,
-        venue: req.body.venue
+        venue: req.body.venue,
+        updated_at: req.body.updated_at
         // add updated at date
       } }, { new: true }, function (err, event) {
         if (err) return res.send(err);
