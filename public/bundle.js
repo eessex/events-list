@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4f3900b5de6591c2a85e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9288a2044aecc23c3808"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -17967,7 +17967,7 @@ if (global.document) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RESET_DELETED_EVENT = exports.DELETE_EVENT_FAILURE = exports.DELETE_EVENT_SUCCESS = exports.DELETE_EVENT = exports.UPDATE_EVENT_FAILURE = exports.UPDATE_EVENT_SUCCESS = exports.UPDATE_EVENT = exports.RESET_ACTIVE_EVENT = exports.FETCH_EVENT_FAILURE = exports.FETCH_EVENT_SUCCESS = exports.FETCH_EVENT = exports.RESET_EVENT_FIELDS = exports.VALIDATE_EVENT_FIELDS_FAILURE = exports.VALIDATE_EVENT_FIELDS_SUCCESS = exports.VALIDATE_EVENT_FIELDS = exports.RESET_NEW_EVENT = exports.CREATE_EVENT_FAILURE = exports.CREATE_EVENT_SUCCESS = exports.CREATE_EVENT = exports.RESET_EVENTS = exports.FETCH_EVENTS_FAILURE = exports.FETCH_EVENTS_SUCCESS = exports.FETCH_EVENTS = undefined;
+exports.RESET_DELETED_EVENT = exports.DELETE_EVENT_FAILURE = exports.DELETE_EVENT_SUCCESS = exports.DELETE_EVENT = exports.UPDATE_EVENT_FAILURE = exports.UPDATE_EVENT_SUCCESS = exports.UPDATE_EVENT = exports.FETCH_EVENT_FAILURE = exports.FETCH_EVENT_SUCCESS = exports.FETCH_EVENT = exports.RESET_EVENT_FIELDS = exports.VALIDATE_EVENT_FIELDS_FAILURE = exports.VALIDATE_EVENT_FIELDS_SUCCESS = exports.VALIDATE_EVENT_FIELDS = exports.RESET_ACTIVE_EVENT = exports.CREATE_EVENT_FAILURE = exports.CREATE_EVENT_SUCCESS = exports.CREATE_EVENT = exports.RESET_EVENTS = exports.FETCH_EVENTS_FAILURE = exports.FETCH_EVENTS_SUCCESS = exports.FETCH_EVENTS = undefined;
 exports.fetchEvents = fetchEvents;
 exports.fetchEventsSuccess = fetchEventsSuccess;
 exports.fetchEventsFailure = fetchEventsFailure;
@@ -17978,7 +17978,6 @@ exports.resetEventFields = resetEventFields;
 exports.createEvent = createEvent;
 exports.createEventSuccess = createEventSuccess;
 exports.createEventFailure = createEventFailure;
-exports.resetNewEvent = resetNewEvent;
 exports.resetDeletedEvent = resetDeletedEvent;
 exports.fetchEvent = fetchEvent;
 exports.fetchEventSuccess = fetchEventSuccess;
@@ -18007,9 +18006,9 @@ var RESET_EVENTS = exports.RESET_EVENTS = 'RESET_EVENTS';
 var CREATE_EVENT = exports.CREATE_EVENT = 'CREATE_EVENT';
 var CREATE_EVENT_SUCCESS = exports.CREATE_EVENT_SUCCESS = 'CREATE_EVENT_SUCCESS';
 var CREATE_EVENT_FAILURE = exports.CREATE_EVENT_FAILURE = 'CREATE_EVENT_FAILURE';
-var RESET_NEW_EVENT = exports.RESET_NEW_EVENT = 'RESET_NEW_EVENT';
+var RESET_ACTIVE_EVENT = exports.RESET_ACTIVE_EVENT = 'RESET_ACTIVE_EVENT';
 
-//Validate event fields like Title, Categries on the server
+// Validate on the server
 var VALIDATE_EVENT_FIELDS = exports.VALIDATE_EVENT_FIELDS = 'VALIDATE_EVENT_FIELDS';
 var VALIDATE_EVENT_FIELDS_SUCCESS = exports.VALIDATE_EVENT_FIELDS_SUCCESS = 'VALIDATE_EVENT_FIELDS_SUCCESS';
 var VALIDATE_EVENT_FIELDS_FAILURE = exports.VALIDATE_EVENT_FIELDS_FAILURE = 'VALIDATE_EVENT_FIELDS_FAILURE';
@@ -18019,7 +18018,6 @@ var RESET_EVENT_FIELDS = exports.RESET_EVENT_FIELDS = 'RESET_EVENT_FIELDS';
 var FETCH_EVENT = exports.FETCH_EVENT = 'FETCH_EVENT';
 var FETCH_EVENT_SUCCESS = exports.FETCH_EVENT_SUCCESS = 'FETCH_EVENT_SUCCESS';
 var FETCH_EVENT_FAILURE = exports.FETCH_EVENT_FAILURE = 'FETCH_EVENT_FAILURE';
-var RESET_ACTIVE_EVENT = exports.RESET_ACTIVE_EVENT = 'RESET_ACTIVE_EVENT';
 
 //Update event
 var UPDATE_EVENT = exports.UPDATE_EVENT = 'UPDATE_EVENT';
@@ -18116,19 +18114,11 @@ function createEventFailure(error) {
   };
 }
 
-function resetNewEvent() {
-  return {
-    type: RESET_NEW_EVENT
-  };
-}
-;
-
 function resetDeletedEvent() {
   return {
     type: RESET_DELETED_EVENT
   };
 }
-;
 
 function fetchEvent(id) {
   var request = _axios2.default.get(ROOT_URL + '/events/' + id);
@@ -47092,17 +47082,13 @@ exports.default = function () {
   switch (action.type) {
 
     case _events.FETCH_EVENTS:
-      // start fetching events and set loading = true
       return _extends({}, state, { eventsList: { events: [], error: null, loading: true } });
     case _events.FETCH_EVENTS_SUCCESS:
-      // return list of events and make loading = false
       return _extends({}, state, { eventsList: { events: action.payload, error: null, loading: false } });
     case _events.FETCH_EVENTS_FAILURE:
-      // return error and make loading = false
-      error = action.payload || { message: action.payload.message }; //2nd one is network or server down errors
+      error = action.payload || { message: action.payload.message };
       return _extends({}, state, { eventsList: { events: [], error: error, loading: false } });
     case _events.RESET_EVENTS:
-      // reset eventList to initial state
       return _extends({}, state, { eventsList: { events: [], error: null, loading: false } });
 
     case _events.FETCH_EVENT:
@@ -47110,7 +47096,7 @@ exports.default = function () {
     case _events.FETCH_EVENT_SUCCESS:
       return _extends({}, state, { activeEvent: { event: action.payload, error: null, loading: false } });
     case _events.FETCH_EVENT_FAILURE:
-      error = action.payload || { message: action.payload.message }; //2nd one is network or server down errors
+      error = action.payload || { message: action.payload.message };
       return _extends({}, state, { activeEvent: { event: null, error: error, loading: false } });
     case _events.RESET_ACTIVE_EVENT:
       return _extends({}, state, { activeEvent: { event: null, error: null, loading: false } });
@@ -47120,10 +47106,8 @@ exports.default = function () {
     case _events.CREATE_EVENT_SUCCESS:
       return _extends({}, state, { activeEvent: { event: action.payload, error: null, loading: false } });
     case _events.CREATE_EVENT_FAILURE:
-      error = action.payload || { message: action.payload.message }; //2nd one is network or server down errors
+      error = action.payload || { message: action.payload.message };
       return _extends({}, state, { activeEvent: { event: null, error: error, loading: false } });
-    case _events.RESET_NEW_EVENT:
-      return _extends({}, state, { activeEvent: { event: null, error: null, loading: false } });
 
     case _events.UPDATE_EVENT:
       return _extends({}, state, { activeEvent: _extends({}, state.activeEvent, { loading: true }) });
@@ -47135,7 +47119,7 @@ exports.default = function () {
     case _events.DELETE_EVENT_SUCCESS:
       return _extends({}, state, { deletedEvent: { event: action.payload, error: null, loading: false } });
     case _events.DELETE_EVENT_FAILURE:
-      error = action.payload || { message: action.payload.message }; //2nd one is network or server down errors
+      error = action.payload || { message: action.payload.message };
       return _extends({}, state, { deletedEvent: { event: null, error: error, loading: false } });
     case _events.RESET_DELETED_EVENT:
       return _extends({}, state, { deletedEvent: { event: null, error: null, loading: false } });
@@ -47161,7 +47145,8 @@ exports.default = function () {
 
 var _events = __webpack_require__(63);
 
-var INITIAL_STATE = { eventsList: { events: [], error: null, loading: false },
+var INITIAL_STATE = {
+  eventsList: { events: [], error: null, loading: false },
   activeEvent: { event: {}, error: null, loading: false },
   deletedEvent: { event: null, error: null, loading: false }
 };

@@ -10,9 +10,9 @@ export const RESET_EVENTS = 'RESET_EVENTS';
 export const CREATE_EVENT = 'CREATE_EVENT';
 export const CREATE_EVENT_SUCCESS = 'CREATE_EVENT_SUCCESS';
 export const CREATE_EVENT_FAILURE = 'CREATE_EVENT_FAILURE';
-export const RESET_NEW_EVENT = 'RESET_NEW_EVENT';
+export const RESET_ACTIVE_EVENT = 'RESET_ACTIVE_EVENT';
 
-//Validate event fields like Title, Categries on the server
+// Validate on the server
 export const VALIDATE_EVENT_FIELDS = 'VALIDATE_EVENT_FIELDS';
 export const VALIDATE_EVENT_FIELDS_SUCCESS = 'VALIDATE_EVENT_FIELDS_SUCCESS';
 export const VALIDATE_EVENT_FIELDS_FAILURE = 'VALIDATE_EVENT_FIELDS_FAILURE';
@@ -22,7 +22,6 @@ export const RESET_EVENT_FIELDS = 'RESET_EVENT_FIELDS';
 export const FETCH_EVENT = 'FETCH_EVENT';
 export const FETCH_EVENT_SUCCESS = 'FETCH_EVENT_SUCCESS';
 export const FETCH_EVENT_FAILURE = 'FETCH_EVENT_FAILURE';
-export const RESET_ACTIVE_EVENT = 'RESET_ACTIVE_EVENT';
 
 //Update event
 export const UPDATE_EVENT = 'UPDATE_EVENT';
@@ -124,19 +123,11 @@ export function createEventFailure(error) {
   };
 }
 
-export function resetNewEvent() {
-  return {
-    type: RESET_NEW_EVENT
-  }
-}
-;
-
 export function resetDeletedEvent() {
   return {
     type: RESET_DELETED_EVENT
-  }
+  };
 }
-;
 
 export function fetchEvent(id) {
   const request = axios.get(`${ROOT_URL}/events/${id}`);
