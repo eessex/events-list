@@ -29,8 +29,10 @@ const mapDispatchToProps = (dispatch) => {
         .then((result) => {
           console.log(result.payload)
           if (result.payload.response && result.payload.response.status !== 200) {
+            debugger
             dispatch(createEventFailure(result.payload.response.data));
           } else {
+            debugger
             dispatch(createEventSuccess(result.payload.data))
           }
         })
@@ -46,7 +48,7 @@ const mapDispatchToProps = (dispatch) => {
         })
     },
     resetMe: () => {
-      dispatch(resetActiveEvent());
+      dispatch(resetActiveEvent())
       dispatch(resetDeletedEvent());
     }
   }

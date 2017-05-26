@@ -110,6 +110,7 @@ export function createEvent(props) {
 }
 
 export function createEventSuccess(event) {
+  console.log('createEventSuccess')
   return {
     type: CREATE_EVENT_SUCCESS,
     payload: event
@@ -117,6 +118,7 @@ export function createEventSuccess(event) {
 }
 
 export function createEventFailure(error) {
+  debugger
   return {
     type: CREATE_EVENT_FAILURE,
     payload: error
@@ -153,8 +155,14 @@ export function fetchEventFailure(error) {
 }
 
 export function resetActiveEvent() {
+  debugger
   return {
-    type: RESET_ACTIVE_EVENT
+    type: RESET_ACTIVE_EVENT,
+    data: {
+      all_day: false,
+      published: false,
+      title: null
+    }
   }
 }
 

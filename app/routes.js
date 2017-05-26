@@ -17,7 +17,7 @@ export default (
       <Route path="info" component={Info}/>
       <Route path="/events/:_id" component={EventShow}/>
       <Route path="/events" component={EventsIndex}/>
-      <Route path="/new/event" component={EventShow}/>
+      <Route path="/events/new" component={EventShow}/>
       <Route path="*" component={NotFound}/>
     </Route>
 );

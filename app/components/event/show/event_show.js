@@ -55,18 +55,3 @@ class EventShow extends Component {
 }
 
 export default EventShow;
-
-	        // <p>{event.images[0]}</p>
-	        // <h5>{event.urls ? event.urls[0] : ''}</h5>
-
-//         start_date: '',
-//         end_date: '',
-//         all_day: false,
-//         title: '',
-//         description: '',
-//         venue: '',
-//         organizer: '',
-//         images: [],
-//         slugs: [],
-//         urls: [],
-//         images: [],

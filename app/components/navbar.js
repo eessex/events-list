@@ -24,7 +24,7 @@ const Navbar = React.createClass({
 	        </h1>
 	        <ul className='nav--main__items' style={styles.navItems}>
 	          <li><Link to="/events">Events</Link></li>
-            <li style={styles.link}><Link to="/new/event">New Event</Link></li>
+            <li style={styles.link}><Link to="/events/new">New Event</Link></li>
 	          <li style={styles.link}><Link to="/info">Info</Link></li>
 	        </ul>
 	      </nav>

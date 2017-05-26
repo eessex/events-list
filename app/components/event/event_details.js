@@ -16,11 +16,13 @@ class EventDetails extends Component {
   }
 
   componentWillUnmount() {
+    debugger
     this.props.resetMe();
   }
 
   componentDidMount() {
-    if (this.props.eventId) {
+    debugger
+    if (this.props.eventId != 'new') {
       this.props.fetchEvent(this.props.eventId);
     }
   }
@@ -35,7 +37,7 @@ class EventDetails extends Component {
       return <div className="container">Loading...</div>;
     } else if (error) {
       return  <div className="alert alert-danger">{error.message}</div>
-    } else if (!this.props.eventId) {
+    } else if (this.props.eventId == 'new') {
       return (
         <div className="event responsive-container">
           <EventEdit event={event} new={true} loading={loading} error={error} updateEvent={this.props.createEvent} resetMe={this.props.resetMe} />

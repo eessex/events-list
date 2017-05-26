@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9288a2044aecc23c3808"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1a5bbf93ebdc0bb67835"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -18101,6 +18101,7 @@ function createEvent(props) {
 }
 
 function createEventSuccess(event) {
+  console.log('createEventSuccess');
   return {
     type: CREATE_EVENT_SUCCESS,
     payload: event
@@ -18108,6 +18109,7 @@ function createEventSuccess(event) {
 }
 
 function createEventFailure(error) {
+  debugger;
   return {
     type: CREATE_EVENT_FAILURE,
     payload: error
@@ -18143,8 +18145,14 @@ function fetchEventFailure(error) {
 }
 
 function resetActiveEvent() {
+  debugger;
   return {
-    type: RESET_ACTIVE_EVENT
+    type: RESET_ACTIVE_EVENT,
+    data: {
+      all_day: false,
+      published: false,
+      title: null
+    }
   };
 }
 
@@ -45758,12 +45766,14 @@ var EventDetails = function (_Component) {
   _createClass(EventDetails, [{
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
+      debugger;
       this.props.resetMe();
     }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      if (this.props.eventId) {
+      debugger;
+      if (this.props.eventId != 'new') {
         this.props.fetchEvent(this.props.eventId);
       }
     }
@@ -45792,7 +45802,7 @@ var EventDetails = function (_Component) {
           { className: 'alert alert-danger' },
           error.message
         );
-      } else if (!this.props.eventId) {
+      } else if (this.props.eventId == 'new') {
         return _react2.default.createElement(
           'div',
           { className: 'event responsive-container' },
@@ -45969,21 +45979,6 @@ EventShow.contextTypes = {
   router: _react.PropTypes.object
 };
 exports.default = EventShow;
-
-// <p>{event.images[0]}</p>
-// <h5>{event.urls ? event.urls[0] : ''}</h5>
-
-//         start_date: '',
-//         end_date: '',
-//         all_day: false,
-//         title: '',
-//         description: '',
-//         venue: '',
-//         organizer: '',
-//         images: [],
-//         slugs: [],
-//         urls: [],
-//         images: [],
 
 /***/ }),
 /* 366 */
@@ -46375,7 +46370,7 @@ var Navbar = _react2.default.createClass({
 					{ style: styles.link },
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/new/event' },
+						{ to: '/events/new' },
 						'New Event'
 					)
 				),
@@ -46470,6 +46465,11 @@ var EventShow = function (_Component) {
   }
 
   _createClass(EventShow, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      (0, _events.resetActiveEvent)();
+    }
+  }, {
     key: 'onDeleteClick',
     value: function onDeleteClick() {
       var _this2 = this;
@@ -46998,8 +46998,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
       dispatch((0, _events.createEvent)(event)).then(function (result) {
         console.log(result.payload);
         if (result.payload.response && result.payload.response.status !== 200) {
+          debugger;
           dispatch((0, _events.createEventFailure)(result.payload.response.data));
         } else {
+          debugger;
           dispatch((0, _events.createEventSuccess)(result.payload.data));
         }
       });
@@ -47203,7 +47205,7 @@ exports.default = _react2.default.createElement(
   _react2.default.createElement(_reactRouter.Route, { path: 'info', component: _info2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '/events/:_id', component: _event_show2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '/events', component: _events_index2.default }),
-  _react2.default.createElement(_reactRouter.Route, { path: '/new/event', component: _event_show2.default }),
+  _react2.default.createElement(_reactRouter.Route, { path: '/events/new', component: _event_show2.default }),
   _react2.default.createElement(_reactRouter.Route, { path: '*', component: _error_2.default })
 );
 

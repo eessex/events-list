@@ -9,6 +9,9 @@
     padding: .25em 1em; }
   .events--table .th, .events--table .td {
     width: 15%; }
+a {
+  color: #000; }
+
 h5, .h5 {
   font-size: 0.83em;
   font-weight: 600; }
